@@ -27,13 +27,13 @@ Zeal IoT developed with Dart, Flutter and working with Firebase, a cloud service
 
 6. Edit `lib/config.dart` with you Firebase web key, see your web key at project setting page.
 
-7. Deploy Zeal IoT to Firebase Hosting.
+7. Build Zeal IoT with Flutter ``flutter build web``.
 
-8. Now, you can register a new account, add device and push data. 
+8. Deploy Zeal IoT to Firebase Hosting ``firebase deploy --only hosting``.
+
+9. Now, you can register a new account, add device and push data. 
 
 
-\
-\
 Develop your firmware
 ===
 
@@ -55,8 +55,7 @@ The basic firmware send 2 data fields (temp, humid) and 1 control field (c1). Yo
 
 Upload and see message log at serial monitor.
 
-\
-\
+
 Send data to Zeal IoT
 ===
 
