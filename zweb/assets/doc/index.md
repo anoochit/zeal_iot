@@ -8,7 +8,6 @@ Zeal IoT developed with Dart, Flutter and working with Firebase, a cloud service
     * [Git client](https://git-scm.com/)
     * [Flutter SDK](https://flutter.dev/) 
     * [Firebase account](https://firebase.google.com/)
-    * [Firebase cli](https://firebase.google.com/docs/cli)
 
 2. Clone the project from [GitHub](https://github.com/anoochit/zeal_iot). The project consist of 
 
@@ -30,7 +29,7 @@ Zeal IoT developed with Dart, Flutter and working with Firebase, a cloud service
 
 7. Build Zeal IoT with Flutter ``flutter build web``.
 
-8. Use Firebase cli to deploy Zeal IoT to Firebase Hosting ``firebase deploy --only hosting``.
+8. Deploy Zeal IoT to Firebase Hosting ``firebase deploy --only hosting``.
 
 9. Now, you can register a new account, add device and push data. 
 
