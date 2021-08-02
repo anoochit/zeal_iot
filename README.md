@@ -34,7 +34,7 @@ Smart Home
 
 <img src="https://raw.githubusercontent.com/anoochit/zeal_iot/master/doc/vehicletracking.jpg" width="640">
 
-Smart Vehicle Teacking
+Smart Vehicle Tracking
 
 
 # Support
