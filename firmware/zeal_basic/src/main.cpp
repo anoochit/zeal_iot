@@ -89,16 +89,7 @@ void setup()
   dht.temperature().getSensor(&sensor);
   dht.humidity().getSensor(&sensor);
 
-  // Set offset time in seconds to adjust for your timezone, for example:
-  // GMT +1 = 3600
-  // GMT +8 = 28800
-  // GMT -1 = -3600
-  // GMT 0 = 0
-  timeClient.begin();
-  //timeClient.setTimeOffset(25200);
-
-  // force update time
-  timeClient.update();
+ 
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
@@ -111,6 +102,17 @@ void setup()
   Serial.print("Connected with IP: ");
   Serial.println(WiFi.localIP());
   Serial.println();
+
+  // Set offset time in seconds to adjust for your timezone, for example:
+  // GMT +1 = 3600
+  // GMT +8 = 28800
+  // GMT -1 = -3600
+  // GMT 0 = 0
+  timeClient.begin();
+  //timeClient.setTimeOffset(25200);
+
+  // force update time
+  timeClient.update();
 
   /* Assign the project host and api key (required) */
   config.host = FIREBASE_HOST;
@@ -167,9 +169,6 @@ void loop()
   }
   Serial.println("------------------------------------");
   Serial.println();
-
-  // force update time
-  timeClient.update();
 
   // read data from firestore every 5 secound
   if (millis() - controlMillis > 3000 || controlMillis == 0)
