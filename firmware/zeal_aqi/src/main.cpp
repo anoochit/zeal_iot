@@ -35,23 +35,23 @@ PMS::DATA data;
 #define C1PIN 4
 
 /* 1. Define the WiFi credentials */
-#define WIFI_SSID "Redlinesoft"
-#define WIFI_PASSWORD "0898433717"
+#define WIFI_SSID " "
+#define WIFI_PASSWORD " "
 
 /* 2. Define the Firebase project host name and API Key */
-#define FIREBASE_HOST "crocco-be61b.firebaseio.com"
-#define API_KEY "AIzaSyC0XVx5M8E92T9WT5JoziEvkViyZ5Ha4To"
+#define FIREBASE_HOST " "
+#define API_KEY " "
 
 /* 3. Define the project ID */
-#define FIREBASE_PROJECT_ID "crocco-be61b"
+#define FIREBASE_PROJECT_ID " "
 
 /* 4. Define the user Email and password that alreadey registerd or added in your project */
-#define USER_EMAIL "anoochit@gmail.com"
-#define USER_PASSWORD "hello123"
+#define USER_EMAIL " "
+#define USER_PASSWORD " "
 
 /* 5. Define the user access key and device id */
-#define DEVICE_ID "Iy3lNTq2s8k8maU8hKu6"
-#define ACCESS_KEY "iqHiAKBF11Ws2IvKYl5jKOwKluf1"
+#define DEVICE_ID " "
+#define ACCESS_KEY " "
 
 // define NTP Client
 WiFiUDP ntpUDP;
