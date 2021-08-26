@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:beamer/beamer.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -142,10 +143,17 @@ class _DevicePageState extends State<DevicePage> {
                                           crossAxisAlignment: CrossAxisAlignment.center,
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
-                                            Icon(
-                                              Icons.developer_board,
-                                              size: constraints.maxWidth * 0.65,
-                                              color: Theme.of(context).primaryColor.withOpacity(0.6),
+                                            InkWell(
+                                              hoverColor: Colors.transparent,
+                                              child: Icon(
+                                                Icons.developer_board,
+                                                size: constraints.maxWidth * 0.65,
+                                                color: Theme.of(context).primaryColor.withOpacity(0.6),
+                                              ),
+                                              onTap: () {
+                                                // open dashboard
+                                                context.beamToNamed('/device/' + docs[index].id);
+                                              },
                                             ),
                                             Container(
                                               alignment: Alignment.center,
@@ -512,7 +520,7 @@ class _AddDeviceState extends State<AddDevice> {
                                   _listTagControlParam.removeWhere((element) => element == tag);
                                 },
                                 validator: (tag) {
-                                  if (tag!.length < 1) {
+                                  if (tag.length < 1) {
                                     return "enter params";
                                   }
                                   return null;
@@ -549,7 +557,7 @@ class _AddDeviceState extends State<AddDevice> {
                                   _listTagValueParam.removeWhere((element) => element.contains(tag));
                                 },
                                 validator: (tag) {
-                                  if (tag!.length < 1) {
+                                  if (tag.length < 1) {
                                     return "enter params";
                                   }
                                   return null;

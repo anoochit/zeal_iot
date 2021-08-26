@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:zweb/const.dart';
 import 'package:zweb/services/user.dart';
-import 'package:zweb/utils/utils.dart';
 import 'package:zweb/widgets/dashboard_menu.dart';
 import 'package:zweb/widgets/textheader.dart';
 

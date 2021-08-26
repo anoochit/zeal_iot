@@ -24,7 +24,7 @@ class StatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _constrainWidth = width;
-    var _offset;
+    var _offset = offset;
 
     // if mobile overide width to 4 grid
     if ((MediaQuery.of(context).size.width > 960)) {

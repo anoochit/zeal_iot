@@ -47,7 +47,7 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   Widget build(BuildContext context) {
     var _constrainWidth = widget.width;
-    var _offset;
+    var _offset = widget.offset;
 
     // if mobile overide width to 4 grid
     if ((MediaQuery.of(context).size.width > 960)) {

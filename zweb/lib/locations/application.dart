@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:zweb/pages/dashboard.dart';
 import 'package:zweb/pages/dashboard_detail.dart';
 import 'package:zweb/pages/device.dart';
+import 'package:zweb/pages/device_detail.dart';
 import 'package:zweb/pages/document.dart';
 import 'package:zweb/pages/home.dart';
 import 'package:zweb/pages/profile.dart';
@@ -20,6 +21,7 @@ class AppLocation extends BeamLocation {
         '/signup',
         '/dashboard',
         '/dashboard/:dashboardId',
+        '/device/:deviceId',
         '/device',
         '/profile',
       ];
@@ -80,6 +82,13 @@ class AppLocation extends BeamLocation {
             title: 'Device',
             key: ValueKey('device'),
             child: DevicePage(),
+            type: BeamPageType.noTransition,
+          ),
+        if (state.pathParameters.containsKey('deviceId'))
+          BeamPage(
+            key: ValueKey('dashboard-${state.pathParameters['deviceId']}'),
+            title: 'Device',
+            child: DeviceDetailPage(deviceId: state.pathParameters['deviceId'].toString()),
             type: BeamPageType.noTransition,
           ),
       ];

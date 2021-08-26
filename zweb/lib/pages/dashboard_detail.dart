@@ -969,7 +969,7 @@ class _AddWidgetState extends State<AddWidget> {
                               FirebaseFirestore.instance.collection('messages').doc(userUid! + "_" + selectWidgetId!).update({
                                 selectWidgetField.toString(): false,
                               });
-                              // create dashboard widget for switch
+                              // create dashboard widget for switch type
                               FirebaseFirestore.instance.collection('dashboards').doc(widget.dashboardId).collection('items').add({
                                 'data': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'width': selectWidgetWidth!,
@@ -979,7 +979,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 'order': widget.itemCount,
                               }).then((value) => Navigator.pop(context));
                             } else if (selectWidgetType == "map") {
-                              // create dashboard widget for graph type
+                              // create dashboard widget for map type
                               FirebaseFirestore.instance.collection('dashboards').doc(widget.dashboardId).collection('items').add({
                                 'data1': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'data2': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField2!,
