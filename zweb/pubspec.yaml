@@ -3,7 +3,7 @@ description: Zeal Web Dashboard
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   beamer: ^1.5.3
@@ -42,7 +42,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.3.47
   syncfusion_flutter_datagrid: ^20.3.47
   syncfusion_flutter_gauges: ^20.3.47
-  textfield_tags: ^2.0.2
+  textfield_tags: ^1.4.2
   url_launcher: ^6.1.6
 
 dev_dependencies:

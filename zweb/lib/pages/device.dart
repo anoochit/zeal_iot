@@ -23,7 +23,8 @@ class _DevicePageState extends State<DevicePage> {
   int currentDevice = 0;
 
   getQuota() async {
-    var currentDeviceNumber = await FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).get();
+    var currentDeviceNumber =
+        await FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).get();
     log('#no of device = ' + currentDeviceNumber.docs.length.toString());
 
     var userQuota = await FirebaseFirestore.instance.collection('users').doc(userUid).get();
@@ -115,7 +116,8 @@ class _DevicePageState extends State<DevicePage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: StreamBuilder(
-                  stream: FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).snapshots(),
+                  stream:
+                      FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     // has error
                     if (snapshot.hasError) {
@@ -128,7 +130,8 @@ class _DevicePageState extends State<DevicePage> {
 
                       if (docs.length > 0) {
                         return GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
                           itemCount: docs.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
@@ -177,12 +180,16 @@ class _DevicePageState extends State<DevicePage> {
                                             icon: Icon(Icons.more_vert, size: 16),
                                             itemBuilder: (context) => <PopupMenuEntry>[
                                               PopupMenuItem(child: Text("Info"), value: 'info'),
-                                              PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
+                                              PopupMenuItem(
+                                                  child: Text("Delete", style: kTextWarning), value: 'delete'),
                                             ],
                                             onSelected: (value) {
                                               if (value == "delete") {
                                                 // delete device
-                                                FirebaseFirestore.instance.collection('devices').doc(docs[index].id).delete();
+                                                FirebaseFirestore.instance
+                                                    .collection('devices')
+                                                    .doc(docs[index].id)
+                                                    .delete();
                                               }
                                               if (value == "info") {
                                                 // control

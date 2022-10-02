@@ -25,20 +25,6 @@ class AppLocation extends BeamLocation<BeamState> {
         '/profile',
       ];
 
-  // @override
-  // List<String> get pathBlueprints => [
-  //       '/',
-  //       '/feature',
-  //       '/document',
-  //       '/signin',
-  //       '/signup',
-  //       '/dashboard',
-  //       '/dashboard/:dashboardId',
-  //       '/device/:deviceId',
-  //       '/device',
-  //       '/profile',
-  //     ];
-
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) => [
         BeamPage(
