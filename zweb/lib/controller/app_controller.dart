@@ -21,52 +21,30 @@ class AppController extends GetxController {
 
   saveUserData({required String uid, required String displayName, required String photoUrl, required String role}) {
     // save new user to firebase
-    FirebaseFirestore.instance.collection('users').doc(uid).get().then(
-      (value) {
-        if (value.exists) {
-          // set value
-          userDisplayName.value = value['name'];
-          userPhotoURL.value = value['image'];
-          userUid.value = value.id;
-          userRole = value['role'];
 
-          log('Already has user in firestore collection');
+    userDisplayName.value = displayName;
+    userUid.value = uid;
+    userPhotoURL.value = photoUrl;
+    userRole.value = role;
 
-          // save to sharepreference
-          setUserSharedPreference(
-            uid: uid,
-            displayname: '$userDisplayName',
-            photoURL: '$userPhotoURL',
-            role: '$userRole',
-          );
-        } else {
-          log('No user data in firestore collection');
+    // save to sharepreference
+    setUserSharedPreference(
+      uid: FirebaseAuth.instance.currentUser!.uid,
+      displayname: '$userDisplayName',
+      photoURL: '$userPhotoURL',
+      role: '$role',
+    );
 
-          // set value
-          userDisplayName.value = displayName;
-          userUid.value = uid;
-          userPhotoURL.value = photoUrl;
-          userRole.value = role;
-
-          // save to sharepreference
-          setUserSharedPreference(
-            uid: FirebaseAuth.instance.currentUser!.uid,
-            displayname: '$userDisplayName',
-            photoURL: '$userPhotoURL',
-            role: '$role',
-          );
-
-          // save to firebase
-          FirebaseFirestore.instance.collection('users').doc(uid).set(
-            {
-              'name': userDisplayName,
-              'image': userPhotoURL,
-              'role': role,
-            },
-          );
-        }
+    // save to firebase
+    FirebaseFirestore.instance.collection('users').doc(uid).set(
+      {
+        'name': userDisplayName,
+        'image': userPhotoURL,
+        'role': role,
       },
     );
+
+    update();
   }
 
   loadUserData() async {

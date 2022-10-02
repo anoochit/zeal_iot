@@ -74,3 +74,5 @@ final kElevatedButtonPinkButton = ElevatedButton.styleFrom(backgroundColor: Colo
 final kElevatedButtonAmberButton = ElevatedButton.styleFrom(backgroundColor: Colors.amber);
 
 final kCardBorderRadius = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
+
+final defaultAvatar = "https://via.placeholder.com/150";
