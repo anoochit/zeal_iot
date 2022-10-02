@@ -64,9 +64,10 @@ final kTextHeaderPage = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 final kTextWarning = TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
 final kTextItemTitle = TextStyle(fontWeight: FontWeight.bold);
 
-final kElevatedButtonRedButton = ElevatedButton.styleFrom(primary: Colors.red);
-final kElevatedButtonGreenButton = ElevatedButton.styleFrom(primary: Colors.green);
-final kElevatedButtonPinkButton = ElevatedButton.styleFrom(primary: Colors.pink);
-final kElevatedButtonAmberButton = ElevatedButton.styleFrom(primary: Colors.amber);
+final kElevatedButtonRedButton = ElevatedButton.styleFrom(backgroundColor: Colors.red);
+final kElevatedButtonGreenButton = ElevatedButton.styleFrom(backgroundColor: Colors.green);
+final kElevatedButtonPinkButton = ElevatedButton.styleFrom(backgroundColor: Colors.pink);
+final kElevatedButtonAmberButton = ElevatedButton.styleFrom(backgroundColor: Colors.amber);
 
-final kCardBorderRadius = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
+final kCardBorderRadius =
+    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));

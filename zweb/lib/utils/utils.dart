@@ -3,7 +3,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 bool validateEmail(String value) {
-  if (!value.contains(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"))) {
+  if (!value
+      .contains(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+"))) {
     return true;
   } else {
     return false;
@@ -18,7 +19,9 @@ int getGridSized(double scWidth) {
           : 2;
 }
 
-void launchURL(String url) async => await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
+void launchURL(String url) async => await canLaunchUrl(Uri.parse(url))
+    ? await launchUrl(Uri.parse(url))
+    : throw 'Could not launch $url';
 
 Future<void> deleteCacheDir() async {
   final cacheDir = await getTemporaryDirectory();
