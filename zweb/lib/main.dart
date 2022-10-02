@@ -5,12 +5,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:zweb/const.dart';
+import 'package:zweb/firebase_options.dart';
 import 'package:zweb/locations/application.dart';
 import 'package:zweb/services/firebase_auth.dart';
 import 'package:zweb/services/user.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // init firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(MyApp());
 }
 
@@ -20,8 +27,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
   late final _routerDelegate;
 
   @override
@@ -31,17 +36,23 @@ class _MyAppState extends State<MyApp> {
     // set router delegate
     _routerDelegate = BeamerDelegate(
       initialPath: '/',
-      locationBuilder: (state) => AppLocation(state),
-      guards: [
+      locationBuilder: (p0, p1) => AppLocation(),
+      guards: <BeamGuard>[
         BeamGuard(
-          pathBlueprints: ['/device', '/device/:deviceId', '/dashboard', '/dashboard/:dashboardId', '/profile'],
+          pathPatterns: [
+            '/device',
+            '/device/:deviceId',
+            '/dashboard',
+            '/dashboard/:dashboardId',
+            '/profile',
+          ],
           check: (context, location) => isSignIn() == true,
-          beamToNamed: '/signin',
+          beamToNamed: (origin, target) => '/signin',
         ),
         BeamGuard(
-          pathBlueprints: ['/', '/signin', '/signup', '/document'],
+          pathPatterns: ['/', '/signin', '/signup', '/document'],
           check: (context, location) => isSignIn() == false,
-          beamToNamed: '/dashboard',
+          beamToNamed: (origin, target) => '/dashboard',
         ),
       ],
     );
@@ -76,23 +87,7 @@ class _MyAppState extends State<MyApp> {
         routerDelegate: _routerDelegate,
         routeInformationParser: BeamerParser(),
         builder: (context, child) {
-          return FutureBuilder(
-            future: _initialization,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Container(color: Colors.red);
-              }
-              if (snapshot.connectionState == ConnectionState.done) {
-                // this child is the Navigator stack produced by Beamer
-                return child!;
-              }
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
-          );
+          return child!;
         },
       ),
     );

@@ -27,31 +27,33 @@ class _DashboardDetailPageState extends State<DashboardDetailPage> {
     log("uid -> " + userUid.toString());
     log("dashboardId -> " + widget.dashboardId);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: DashboardMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('dashboards').doc(dashboardId).snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          // has error
-          if (snapshot.hasError) {
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: DashboardMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('dashboards').doc(dashboardId).snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            // has error
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Something went wrong!'),
+              );
+            }
+
+            // has data
+            if (snapshot.hasData) {
+              return DashboardDetail(data: snapshot.data);
+            }
+
+            // wait snapshot
             return Center(
-              child: Text('Something went wrong!'),
+              child: CircularProgressIndicator(),
             );
-          }
-
-          // has data
-          if (snapshot.hasData) {
-            return DashboardDetail(data: snapshot.data);
-          }
-
-          // wait snapshot
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }
@@ -148,7 +150,12 @@ class _DashboardDetailState extends State<DashboardDetail> {
               padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: LayoutBuilder(builder: (context, constraints) {
                 return StreamBuilder(
-                  stream: FirebaseFirestore.instance.collection('dashboards').doc(widget.data!.id).collection('items').orderBy("order").snapshots(),
+                  stream: FirebaseFirestore.instance
+                      .collection('dashboards')
+                      .doc(widget.data!.id)
+                      .collection('items')
+                      .orderBy("order")
+                      .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
                       return Text("Something went wrong");
@@ -172,9 +179,15 @@ class _DashboardDetailState extends State<DashboardDetail> {
                             );
                           }).toList(),
                           onReorder: (int oldIndex, int newIndex) {
-                            debugPrint('${DateTime.now().toString().substring(5, 22)} reorder oldIndex:$oldIndex newIndex:$newIndex');
+                            debugPrint(
+                                '${DateTime.now().toString().substring(5, 22)} reorder oldIndex:$oldIndex newIndex:$newIndex');
                             log('${widget.data!.id}/${widgetDocs[oldIndex].id}');
-                            FirebaseFirestore.instance.collection("dashboards").doc(widget.data!.id).collection("items").doc(widgetDocs[oldIndex].id).update({'order': newIndex});
+                            FirebaseFirestore.instance
+                                .collection("dashboards")
+                                .doc(widget.data!.id)
+                                .collection("items")
+                                .doc(widgetDocs[oldIndex].id)
+                                .update({'order': newIndex});
                             log(widgetDocs[oldIndex].id);
                           },
                         );
@@ -276,7 +289,13 @@ class _DashboardDetailState extends State<DashboardDetail> {
                               var messageField = widget['data'].toString().split("/").last;
                               log(messageDoc);
                               return StreamBuilder(
-                                stream: FirebaseFirestore.instance.collection("messages").doc(messageDoc).collection("log").orderBy('timestamp').limitToLast(60).snapshots(),
+                                stream: FirebaseFirestore.instance
+                                    .collection("messages")
+                                    .doc(messageDoc)
+                                    .collection("log")
+                                    .orderBy('timestamp')
+                                    .limitToLast(60)
+                                    .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasData) {
                                     List<QueryDocumentSnapshot> widgetData = snapshot.data!.docs;
@@ -305,7 +324,13 @@ class _DashboardDetailState extends State<DashboardDetail> {
                               var messageField = widget['data'].toString().split("/").last;
                               log(messageDoc);
                               return StreamBuilder(
-                                stream: FirebaseFirestore.instance.collection("messages").doc(messageDoc).collection("log").orderBy('timestamp').limitToLast(60).snapshots(),
+                                stream: FirebaseFirestore.instance
+                                    .collection("messages")
+                                    .doc(messageDoc)
+                                    .collection("log")
+                                    .orderBy('timestamp')
+                                    .limitToLast(60)
+                                    .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasData) {
                                     List<QueryDocumentSnapshot> widgetData = snapshot.data!.docs;
@@ -334,7 +359,13 @@ class _DashboardDetailState extends State<DashboardDetail> {
                               var messageField = widget['data'].toString().split("/").last;
                               log(messageDoc);
                               return StreamBuilder(
-                                stream: FirebaseFirestore.instance.collection("messages").doc(messageDoc).collection("log").orderBy('timestamp').limitToLast(60).snapshots(),
+                                stream: FirebaseFirestore.instance
+                                    .collection("messages")
+                                    .doc(messageDoc)
+                                    .collection("log")
+                                    .orderBy('timestamp')
+                                    .limitToLast(60)
+                                    .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasData) {
                                     List<QueryDocumentSnapshot> widgetData = snapshot.data!.docs;
@@ -363,7 +394,13 @@ class _DashboardDetailState extends State<DashboardDetail> {
                               var messageField = widget['data'].toString().split("/").last;
                               log(messageDoc);
                               return StreamBuilder(
-                                stream: FirebaseFirestore.instance.collection("messages").doc(messageDoc).collection("log").orderBy('timestamp').limitToLast(60).snapshots(),
+                                stream: FirebaseFirestore.instance
+                                    .collection("messages")
+                                    .doc(messageDoc)
+                                    .collection("log")
+                                    .orderBy('timestamp')
+                                    .limitToLast(60)
+                                    .snapshots(),
                                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                   if (snapshot.hasData) {
                                     List<QueryDocumentSnapshot> widgetData = snapshot.data!.docs;
@@ -958,11 +995,18 @@ class _AddWidgetState extends State<AddWidget> {
                           if (_formKey.currentState!.validate()) {
                             if ((selectWidgetType == "switch") || (selectWidgetType == "status")) {
                               // create field in device message
-                              FirebaseFirestore.instance.collection('messages').doc(userUid! + "_" + selectWidgetId!).update({
+                              FirebaseFirestore.instance
+                                  .collection('messages')
+                                  .doc(userUid! + "_" + selectWidgetId!)
+                                  .update({
                                 selectWidgetField.toString(): false,
                               });
                               // create dashboard widget for switch type
-                              FirebaseFirestore.instance.collection('dashboards').doc(widget.dashboardId).collection('items').add({
+                              FirebaseFirestore.instance
+                                  .collection('dashboards')
+                                  .doc(widget.dashboardId)
+                                  .collection('items')
+                                  .add({
                                 'data': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
@@ -972,7 +1016,11 @@ class _AddWidgetState extends State<AddWidget> {
                               }).then((value) => Navigator.pop(context));
                             } else if (selectWidgetType == "map") {
                               // create dashboard widget for map type
-                              FirebaseFirestore.instance.collection('dashboards').doc(widget.dashboardId).collection('items').add({
+                              FirebaseFirestore.instance
+                                  .collection('dashboards')
+                                  .doc(widget.dashboardId)
+                                  .collection('items')
+                                  .add({
                                 'data1': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'data2': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField2!,
                                 'width': selectWidgetWidth!,
@@ -983,7 +1031,11 @@ class _AddWidgetState extends State<AddWidget> {
                               }).then((value) => Navigator.pop(context));
                             } else {
                               // create dashboard widget for graph type
-                              FirebaseFirestore.instance.collection('dashboards').doc(widget.dashboardId).collection('items').add({
+                              FirebaseFirestore.instance
+                                  .collection('dashboards')
+                                  .doc(widget.dashboardId)
+                                  .collection('items')
+                                  .add({
                                 'data': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
