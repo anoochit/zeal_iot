@@ -1,14 +1,22 @@
-import 'dart:developer';
-
-import 'package:beamer/beamer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:zweb/const.dart';
+import 'package:get/get.dart';
+import 'package:url_strategy/url_strategy.dart';
+import 'package:zweb/binding/root_binging.dart';
+import 'package:zweb/controller/app_controller.dart';
 import 'package:zweb/firebase_options.dart';
-import 'package:zweb/locations/application.dart';
-import 'package:zweb/services/firebase_auth.dart';
-import 'package:zweb/services/user.dart';
+import 'package:zweb/middleware/routeguard.dart';
+import 'package:zweb/pages/authgate.dart';
+import 'package:zweb/pages/dashboard.dart';
+import 'package:zweb/pages/dashboard_detail.dart';
+import 'package:zweb/pages/device.dart';
+import 'package:zweb/pages/device_detail.dart';
+import 'package:zweb/pages/document.dart';
+import 'package:zweb/pages/home.dart';
+import 'package:zweb/pages/profile.dart';
+
+import 'const.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +25,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await auth.setPersistence(Persistence.LOCAL);
+
+  setPathUrlStrategy();
 
   runApp(MyApp());
 }
@@ -27,69 +39,67 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final _routerDelegate;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // set router delegate
-    _routerDelegate = BeamerDelegate(
-      initialPath: '/',
-      locationBuilder: (p0, p1) => AppLocation(),
-      guards: <BeamGuard>[
-        BeamGuard(
-          pathPatterns: [
-            '/device',
-            '/device/:deviceId',
-            '/dashboard',
-            '/dashboard/:dashboardId',
-            '/profile',
-          ],
-          check: (context, location) => isSignIn() == true,
-          beamToNamed: (origin, target) => '/signin',
-        ),
-        BeamGuard(
-          pathPatterns: ['/', '/signin', '/signup', '/document'],
-          check: (context, location) => isSignIn() == false,
-          beamToNamed: (origin, target) => '/dashboard',
-        ),
-      ],
-    );
-
-    // set firebase auth listener
-    firebaseAuth.authStateChanges().listen((User? user) async {
-      if (user == null) {
-        log('User is currently signed out!');
-        setState(() {});
-      } else {
-        log('User is signed in!');
-        getUserSharedPreference();
-        setState(() {});
-      }
-    });
-  }
-
+  AppController controller = Get.put(AppController());
   @override
   Widget build(BuildContext context) {
-    return BeamerProvider(
-      routerDelegate: _routerDelegate,
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: kPrimarySwatch,
-          //primaryColor: kPrimaryColor,
-          canvasColor: Colors.grey.shade50,
-          textTheme: TextTheme(
-            bodyText2: TextStyle(fontSize: 16.0),
-          ),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: "Zeal IoT",
+      initialBinding: RootBinding(),
+      getPages: [
+        GetPage(
+          name: "/",
+          page: () => HomePage(),
+          transition: Transition.noTransition,
         ),
-        routerDelegate: _routerDelegate,
-        routeInformationParser: BeamerParser(),
-        builder: (context, child) {
-          return child!;
-        },
-      ),
+        GetPage(
+          name: "/document",
+          page: () => DocumentPage(),
+          transition: Transition.noTransition,
+        ),
+        GetPage(
+          name: "/signin",
+          page: () => AuthGate(),
+          transition: Transition.noTransition,
+        ),
+        GetPage(
+          name: "/dashboard",
+          page: () => DashboardPage(),
+          middlewares: [
+            RouteGuard(),
+          ],
+          transition: Transition.noTransition,
+        ),
+        GetPage(
+          name: "/dashboard/:id",
+          page: () => DashboardDetailPage(),
+          middlewares: [
+            RouteGuard(),
+          ],
+          transition: Transition.noTransition,
+        ),
+        GetPage(
+          name: "/device",
+          page: () => DevicePage(),
+          transition: Transition.noTransition,
+        ),
+        GetPage(
+          name: "/device/:id",
+          page: () => DeviceDetailPage(),
+          middlewares: [
+            RouteGuard(),
+          ],
+          transition: Transition.noTransition,
+        ),
+        GetPage(
+          name: "/profile",
+          page: () => ProfilePage(),
+          middlewares: [
+            RouteGuard(),
+          ],
+          transition: Transition.noTransition,
+        ),
+      ],
     );
   }
 }

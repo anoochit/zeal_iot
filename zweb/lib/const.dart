@@ -1,5 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class Menu {
   final String title;
@@ -69,5 +73,4 @@ final kElevatedButtonGreenButton = ElevatedButton.styleFrom(backgroundColor: Col
 final kElevatedButtonPinkButton = ElevatedButton.styleFrom(backgroundColor: Colors.pink);
 final kElevatedButtonAmberButton = ElevatedButton.styleFrom(backgroundColor: Colors.amber);
 
-final kCardBorderRadius =
-    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
+final kCardBorderRadius = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
