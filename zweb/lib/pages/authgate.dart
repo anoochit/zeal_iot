@@ -22,7 +22,7 @@ class AuthGate extends StatelessWidget {
               EmailProviderConfiguration(),
             ],
             actions: [
-              // TODO : add sign in action here
+              // add sign in action here
               AuthStateChangeAction<SignedIn>(
                 (context, state) {
                   // signin
@@ -30,7 +30,7 @@ class AuthGate extends StatelessWidget {
                 },
               ),
 
-              // TODO : add register action here
+              // add register action here
               AuthStateChangeAction<UserCreated>(
                 (context, state) {
                   // register new user
