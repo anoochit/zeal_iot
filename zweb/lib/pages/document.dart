@@ -17,17 +17,19 @@ class _DocumentPageState extends State<DocumentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: MainMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            DocumentContent(),
-          ],
+    return SelectionArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: MainMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              DocumentContent(),
+            ],
+          ),
         ),
       ),
     );

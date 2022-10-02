@@ -80,233 +80,235 @@ class _DevicePageState extends State<DevicePage> {
   @override
   Widget build(BuildContext context) {
     double scWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        title: DashboardMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              TextHeader(title: "Device"),
-              Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: (scWidth > 412)
-                    ? TextButton.icon(
-                        icon: Icon(Icons.add_circle),
-                        label: Text("Add Device"),
-                        onPressed: () {
-                          // create device dialog
-                          creatDevice();
-                        },
-                      )
-                    : IconButton(
-                        icon: Icon(Icons.add_circle),
-                        onPressed: () {
-                          // create device dialog
-                          creatDevice();
-                        }),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: StreamBuilder(
-                  stream:
-                      FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    // has error
-                    if (snapshot.hasError) {
-                      return Center(child: Text("Something, went wrong!"));
-                    }
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: DashboardMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                TextHeader(title: "Device"),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 24),
+                  child: (scWidth > 412)
+                      ? TextButton.icon(
+                          icon: Icon(Icons.add_circle),
+                          label: Text("Add Device"),
+                          onPressed: () {
+                            // create device dialog
+                            creatDevice();
+                          },
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {
+                            // create device dialog
+                            creatDevice();
+                          }),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: StreamBuilder(
+                    stream:
+                        FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      // has error
+                      if (snapshot.hasError) {
+                        return Center(child: Text("Something, went wrong!"));
+                      }
 
-                    // has data
-                    if (snapshot.hasData) {
-                      var docs = snapshot.data!.docs;
+                      // has data
+                      if (snapshot.hasData) {
+                        var docs = snapshot.data!.docs;
 
-                      if (docs.length > 0) {
-                        return GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
-                          itemCount: docs.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) => Card(
-                                  shape: kCardBorderRadius,
-                                  child: Stack(
-                                    children: [
-                                      // icon
-                                      Positioned.fill(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            InkWell(
-                                              hoverColor: Colors.transparent,
-                                              child: Icon(
-                                                Icons.developer_board,
-                                                size: constraints.maxWidth * 0.65,
-                                                color: Theme.of(context).primaryColor.withOpacity(0.6),
+                        if (docs.length > 0) {
+                          return GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
+                            itemCount: docs.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) => Card(
+                                    shape: kCardBorderRadius,
+                                    child: Stack(
+                                      children: [
+                                        // icon
+                                        Positioned.fill(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                hoverColor: Colors.transparent,
+                                                child: Icon(
+                                                  Icons.developer_board,
+                                                  size: constraints.maxWidth * 0.65,
+                                                  color: Theme.of(context).primaryColor.withOpacity(0.6),
+                                                ),
+                                                onTap: () {
+                                                  // open dashboard
+                                                  context.beamToNamed('/device/' + docs[index].id);
+                                                },
                                               ),
-                                              onTap: () {
-                                                // open dashboard
-                                                context.beamToNamed('/device/' + docs[index].id);
-                                              },
-                                            ),
-                                            Container(
-                                              alignment: Alignment.center,
-                                              width: constraints.maxWidth * 0.8,
-                                              child: Text(
-                                                docs[index]['name'],
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                //style: kTextItemTitle,
+                                              Container(
+                                                alignment: Alignment.center,
+                                                width: constraints.maxWidth * 0.8,
+                                                child: Text(
+                                                  docs[index]['name'],
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  //style: kTextItemTitle,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // popup
-                                      Positioned(
-                                        right: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: PopupMenuButton(
-                                            icon: Icon(Icons.more_vert, size: 16),
-                                            itemBuilder: (context) => <PopupMenuEntry>[
-                                              PopupMenuItem(child: Text("Info"), value: 'info'),
-                                              PopupMenuItem(
-                                                  child: Text("Delete", style: kTextWarning), value: 'delete'),
                                             ],
-                                            onSelected: (value) {
-                                              if (value == "delete") {
-                                                // delete device
-                                                FirebaseFirestore.instance
-                                                    .collection('devices')
-                                                    .doc(docs[index].id)
-                                                    .delete();
-                                              }
-                                              if (value == "info") {
-                                                // control
-                                                List<dynamic> listDeviceControl = docs[index]['control'];
-                                                // data
-                                                List<dynamic> listDeviceData = docs[index]['data'];
-                                                // show dialog
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) => Dialog(
-                                                    shape: kCardBorderRadius,
-                                                    insetPadding: EdgeInsets.all(10),
-                                                    child: Container(
-                                                      width: 375,
-                                                      padding: EdgeInsets.all(24),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Text(
-                                                              docs[index]['name'],
-                                                              style: Theme.of(context).textTheme.headline5,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Text(docs[index]['description']),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Row(
-                                                              children: [
-                                                                Text("ID : "),
-                                                                Chip(label: SelectableText(docs[index].id)),
-                                                                IconButton(
-                                                                  icon: Icon(Icons.copy, size: 16),
-                                                                  onPressed: () {
-                                                                    FlutterClipboard.copy(docs[index].id);
-                                                                  },
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Wrap(
-                                                              children: [
-                                                                Text("Control : "),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Wrap(
-                                                              children: [
-                                                                for (int i = 0; i < listDeviceControl.length; i++)
-                                                                  Chip(
-                                                                    label: SelectableText(
-                                                                      docs[index]['control'][i],
-                                                                    ),
-                                                                  ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Wrap(
-                                                              children: [
-                                                                Text("Data : "),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Wrap(
-                                                              children: [
-                                                                for (int i = 0; i < listDeviceData.length; i++)
-                                                                  Chip(
-                                                                    label: SelectableText(
-                                                                      docs[index]['data'][i],
-                                                                    ),
-                                                                  ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        // popup
+                                        Positioned(
+                                          right: 1,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(0.0),
+                                            child: PopupMenuButton(
+                                              icon: Icon(Icons.more_vert, size: 16),
+                                              itemBuilder: (context) => <PopupMenuEntry>[
+                                                PopupMenuItem(child: Text("Info"), value: 'info'),
+                                                PopupMenuItem(
+                                                    child: Text("Delete", style: kTextWarning), value: 'delete'),
+                                              ],
+                                              onSelected: (value) {
+                                                if (value == "delete") {
+                                                  // delete device
+                                                  FirebaseFirestore.instance
+                                                      .collection('devices')
+                                                      .doc(docs[index].id)
+                                                      .delete();
+                                                }
+                                                if (value == "info") {
+                                                  // control
+                                                  List<dynamic> listDeviceControl = docs[index]['control'];
+                                                  // data
+                                                  List<dynamic> listDeviceData = docs[index]['data'];
+                                                  // show dialog
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) => Dialog(
+                                                      shape: kCardBorderRadius,
+                                                      insetPadding: EdgeInsets.all(10),
+                                                      child: Container(
+                                                        width: 375,
+                                                        padding: EdgeInsets.all(24),
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Text(
+                                                                docs[index]['name'],
+                                                                style: Theme.of(context).textTheme.headline5,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Text(docs[index]['description']),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Row(
+                                                                children: [
+                                                                  Text("ID : "),
+                                                                  Chip(label: SelectableText(docs[index].id)),
+                                                                  IconButton(
+                                                                    icon: Icon(Icons.copy, size: 16),
+                                                                    onPressed: () {
+                                                                      FlutterClipboard.copy(docs[index].id);
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Wrap(
+                                                                children: [
+                                                                  Text("Control : "),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Wrap(
+                                                                children: [
+                                                                  for (int i = 0; i < listDeviceControl.length; i++)
+                                                                    Chip(
+                                                                      label: SelectableText(
+                                                                        docs[index]['control'][i],
+                                                                      ),
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Wrap(
+                                                                children: [
+                                                                  Text("Data : "),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Wrap(
+                                                                children: [
+                                                                  for (int i = 0; i < listDeviceData.length; i++)
+                                                                    Chip(
+                                                                      label: SelectableText(
+                                                                        docs[index]['data'][i],
+                                                                      ),
+                                                                    ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      } else {
-                        // document snapshot is 0
-                        return Center(child: Text("No device, please create a new one"));
+                              );
+                            },
+                          );
+                        } else {
+                          // document snapshot is 0
+                          return Center(child: Text("No device, please create a new one"));
+                        }
                       }
-                    }
 
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }),
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

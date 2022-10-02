@@ -21,7 +21,8 @@ class _DashboardPageState extends State<DashboardPage> {
   int currentDashboard = 0;
 
   Future<void> getQuota() async {
-    var currentDashboardNumber = await FirebaseFirestore.instance.collection('dashboards').where('user', isEqualTo: userUid).get();
+    var currentDashboardNumber =
+        await FirebaseFirestore.instance.collection('dashboards').where('user', isEqualTo: userUid).get();
     log('#no of dashboard = ' + currentDashboardNumber.docs.length.toString());
 
     var userQuota = await FirebaseFirestore.instance.collection('users').doc(userUid).get();
@@ -60,166 +61,174 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     double scWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        title: DashboardMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              TextHeader(title: "Dashboard"),
-              Spacer(),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: (scWidth > 412)
-                    ? TextButton.icon(
-                        icon: Icon(Icons.add_circle),
-                        label: Text("Create Dashboard"),
-                        onPressed: () {
-                          // create dashboard
-                          createDashboard();
-                        },
-                      )
-                    : IconButton(
-                        icon: Icon(Icons.add_circle),
-                        onPressed: () {
-                          // create dashboard
-                          createDashboard();
-                        }),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance.collection('dashboards').where('user', isEqualTo: userUid).snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  // has error
-                  if (snapshot.hasError) {
-                    return Center(child: Text("Something, went wrong!"));
-                  }
-                  // has data
-                  if (snapshot.hasData) {
-                    var docs = snapshot.data!.docs;
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: DashboardMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                TextHeader(title: "Dashboard"),
+                Spacer(),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: (scWidth > 412)
+                      ? TextButton.icon(
+                          icon: Icon(Icons.add_circle),
+                          label: Text("Create Dashboard"),
+                          onPressed: () {
+                            // create dashboard
+                            createDashboard();
+                          },
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () {
+                            // create dashboard
+                            createDashboard();
+                          }),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: StreamBuilder(
+                  stream:
+                      FirebaseFirestore.instance.collection('dashboards').where('user', isEqualTo: userUid).snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    // has error
+                    if (snapshot.hasError) {
+                      return Center(child: Text("Something, went wrong!"));
+                    }
+                    // has data
+                    if (snapshot.hasData) {
+                      var docs = snapshot.data!.docs;
 
-                    if (docs.length > 0) {
-                      return GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
-                          itemCount: docs.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) => Card(
-                                  shape: kCardBorderRadius,
-                                  child: Stack(
-                                    children: [
-                                      // icon
-                                      Positioned.fill(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            InkWell(
-                                              hoverColor: Colors.transparent,
-                                              child: Icon(
-                                                Icons.dashboard,
-                                                size: constraints.maxWidth * 0.65,
-                                                color: Theme.of(context).primaryColor.withOpacity(0.6),
+                      if (docs.length > 0) {
+                        return GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
+                            itemCount: docs.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Container(
+                                child: LayoutBuilder(
+                                  builder: (context, constraints) => Card(
+                                    shape: kCardBorderRadius,
+                                    child: Stack(
+                                      children: [
+                                        // icon
+                                        Positioned.fill(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              InkWell(
+                                                hoverColor: Colors.transparent,
+                                                child: Icon(
+                                                  Icons.dashboard,
+                                                  size: constraints.maxWidth * 0.65,
+                                                  color: Theme.of(context).primaryColor.withOpacity(0.6),
+                                                ),
+                                                onTap: () {
+                                                  // open dashboard
+                                                  context.beamToNamed('/dashboard/' + docs[index].id);
+                                                },
                                               ),
-                                              onTap: () {
-                                                // open dashboard
-                                                context.beamToNamed('/dashboard/' + docs[index].id);
-                                              },
-                                            ),
-                                            Container(
-                                              alignment: Alignment.center,
-                                              width: constraints.maxWidth * 0.8,
-                                              child: Text(
-                                                docs[index]['title'],
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                //style: kTextItemTitle,
+                                              Container(
+                                                alignment: Alignment.center,
+                                                width: constraints.maxWidth * 0.8,
+                                                child: Text(
+                                                  docs[index]['title'],
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  //style: kTextItemTitle,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // popup
-                                      Positioned(
-                                        right: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(0.0),
-                                          child: PopupMenuButton(
-                                            icon: Icon(Icons.more_vert, size: 16),
-                                            itemBuilder: (context) => <PopupMenuEntry>[
-                                              PopupMenuItem(child: Text("Info"), value: 'info'),
-                                              PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
                                             ],
-                                            onSelected: (value) {
-                                              if (value == "delete") {
-                                                // delete dashboard
-                                                FirebaseFirestore.instance.collection('dashboards').doc(docs[index].id).delete();
-                                              }
-                                              if (value == "info") {
-                                                // show dialog
-
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) => Dialog(
-                                                    shape: kCardBorderRadius,
-                                                    child: Container(
-                                                      width: 350,
-                                                      padding: EdgeInsets.all(24),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Text(
-                                                              docs[index]['title'],
-                                                              style: Theme.of(context).textTheme.headline5,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                                            child: Text(
-                                                              docs[index]['description'],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                        // popup
+                                        Positioned(
+                                          right: 1,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(0.0),
+                                            child: PopupMenuButton(
+                                              icon: Icon(Icons.more_vert, size: 16),
+                                              itemBuilder: (context) => <PopupMenuEntry>[
+                                                PopupMenuItem(child: Text("Info"), value: 'info'),
+                                                PopupMenuItem(
+                                                    child: Text("Delete", style: kTextWarning), value: 'delete'),
+                                              ],
+                                              onSelected: (value) {
+                                                if (value == "delete") {
+                                                  // delete dashboard
+                                                  FirebaseFirestore.instance
+                                                      .collection('dashboards')
+                                                      .doc(docs[index].id)
+                                                      .delete();
+                                                }
+                                                if (value == "info") {
+                                                  // show dialog
+
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) => Dialog(
+                                                      shape: kCardBorderRadius,
+                                                      child: Container(
+                                                        width: 350,
+                                                        padding: EdgeInsets.all(24),
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Text(
+                                                                docs[index]['title'],
+                                                                style: Theme.of(context).textTheme.headline5,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                                              child: Text(
+                                                                docs[index]['description'],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            );
-                          });
-                    } else {
-                      // document snapshot is 0
-                      return Center(child: Text("No dashboard, please create a new one"));
+                              );
+                            });
+                      } else {
+                        // document snapshot is 0
+                        return Center(child: Text("No dashboard, please create a new one"));
+                      }
                     }
-                  }
-                  // wainting snapshot
-                  return Center(child: CircularProgressIndicator());
-                },
+                    // wainting snapshot
+                    return Center(child: CircularProgressIndicator());
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -18,21 +18,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: MainMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            HomeContent(),
-            // footer
-            SizedBox(height: 32.0),
-            Footer(),
-            SizedBox(height: 32.0),
-          ],
+    return SelectionArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: MainMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              HomeContent(),
+              // footer
+              SizedBox(height: 32.0),
+              Footer(),
+              SizedBox(height: 32.0),
+            ],
+          ),
         ),
       ),
     );

@@ -50,192 +50,201 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: DashboardMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: SingleChildScrollView(
-        child: LayoutBuilder(
-          builder: (context, constraints) => Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextHeader(title: "Profile"),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Card(
-                    shape: kCardBorderRadius,
-                    child: Container(
-                      width: constraints.maxWidth,
-                      padding: EdgeInsets.all(16),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                  child: Text(
-                                    userDisplayName,
-                                    style: Theme.of(context).textTheme.headline4,
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: DashboardMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: SingleChildScrollView(
+          child: LayoutBuilder(
+            builder: (context, constraints) => Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextHeader(title: "Profile"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Card(
+                      shape: kCardBorderRadius,
+                      child: Container(
+                        width: constraints.maxWidth,
+                        padding: EdgeInsets.all(16),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                    child: Text(
+                                      userDisplayName,
+                                      style: Theme.of(context).textTheme.headline4,
+                                    ),
                                   ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                  child: Text(
-                                    "Credential",
-                                    style: Theme.of(context).textTheme.headline5,
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                    child: Text(
+                                      "Credential",
+                                      style: Theme.of(context).textTheme.headline5,
+                                    ),
                                   ),
-                                ),
-                                Wrap(
-                                  direction: Axis.horizontal,
-                                  alignment: WrapAlignment.start,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                          child: Text(
-                                            "Access Key",
+                                  Wrap(
+                                    direction: Axis.horizontal,
+                                    alignment: WrapAlignment.start,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                            child: Text(
+                                              "Access Key",
+                                            ),
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                //width: (constraints.maxWidth < 412) ? (constraints.maxWidth - 48) : (constraints.maxWidth * 0.5),
-                                                padding: EdgeInsets.all(16),
-                                                decoration: kContainerRecRoundDecoration,
-                                                child: SelectableText(userUid!),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  //width: (constraints.maxWidth < 412) ? (constraints.maxWidth - 48) : (constraints.maxWidth * 0.5),
+                                                  padding: EdgeInsets.all(16),
+                                                  decoration: kContainerRecRoundDecoration,
+                                                  child: SelectableText(userUid!),
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.copy, size: 16),
-                                              onPressed: () {
-                                                FlutterClipboard.copy(userUid!);
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                          child: Text("API Key"),
-                                        ),
-                                        Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Expanded(
-                                              child: Container(
-                                                //width: (constraints.maxWidth < 412) ? (constraints.maxWidth - 48) : (constraints.maxWidth * 0.5),
-                                                padding: EdgeInsets.all(16),
-                                                decoration: kContainerRecRoundDecoration,
-                                                child: SelectableText(WEB_KEY),
+                                              IconButton(
+                                                icon: Icon(Icons.copy, size: 16),
+                                                onPressed: () {
+                                                  FlutterClipboard.copy(userUid!);
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                            child: Text("API Key"),
+                                          ),
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Expanded(
+                                                child: Container(
+                                                  //width: (constraints.maxWidth < 412) ? (constraints.maxWidth - 48) : (constraints.maxWidth * 0.5),
+                                                  padding: EdgeInsets.all(16),
+                                                  decoration: kContainerRecRoundDecoration,
+                                                  child: SelectableText(WEB_KEY),
+                                                ),
                                               ),
-                                            ),
-                                            IconButton(
-                                              icon: Icon(Icons.copy, size: 16),
-                                              onPressed: () {
-                                                FlutterClipboard.copy(WEB_KEY);
-                                              },
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                  child: Text(
-                                    "Quota",
-                                    style: Theme.of(context).textTheme.headline5,
+                                              IconButton(
+                                                icon: Icon(Icons.copy, size: 16),
+                                                onPressed: () {
+                                                  FlutterClipboard.copy(WEB_KEY);
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                ),
-                                Wrap(
-                                  children: [
-                                    FutureBuilder(
-                                      future: FirebaseFirestore.instance.collection('dashboards').where('user', isEqualTo: userUid).get(),
-                                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                        if (snapshot.hasData) {
-                                          var docs = snapshot.data!.docs;
-                                          var currentDashboard = docs.length;
-
-                                          final formatter = new NumberFormat("#,###");
-
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CircularPercentIndicator(
-                                              radius: 375 / 2,
-                                              lineWidth: 12,
-                                              progressColor: Theme.of(context).primaryColor,
-                                              percent: (currentDashboard / DASHBOARD_QUOTA),
-                                              center: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text("Dashboard Quota"),
-                                                  SizedBox(height: 8.0),
-                                                  Text(formatter.format((currentDashboard / DASHBOARD_QUOTA) * 100) + "%"),
-                                                ],
-                                              ),
-                                              animation: true,
-                                            ),
-                                          );
-                                        }
-                                        return Container();
-                                      },
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                    child: Text(
+                                      "Quota",
+                                      style: Theme.of(context).textTheme.headline5,
                                     ),
-                                    FutureBuilder(
-                                      future: FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).get(),
-                                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                                        if (snapshot.hasData) {
-                                          var docs = snapshot.data!.docs;
-                                          var currentDevice = docs.length;
+                                  ),
+                                  Wrap(
+                                    children: [
+                                      FutureBuilder(
+                                        future: FirebaseFirestore.instance
+                                            .collection('dashboards')
+                                            .where('user', isEqualTo: userUid)
+                                            .get(),
+                                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                          if (snapshot.hasData) {
+                                            var docs = snapshot.data!.docs;
+                                            var currentDashboard = docs.length;
 
-                                          final formatter = new NumberFormat("#,###");
+                                            final formatter = new NumberFormat("#,###");
 
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: CircularPercentIndicator(
-                                              radius: 375 / 2,
-                                              lineWidth: 12,
-                                              progressColor: Theme.of(context).primaryColor,
-                                              percent: (currentDevice / DEVICE_QUOTA),
-                                              center: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text("Device Quota"),
-                                                  SizedBox(height: 8.0),
-                                                  Text(formatter.format((currentDevice / DEVICE_QUOTA) * 100) + "%"),
-                                                ],
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: CircularPercentIndicator(
+                                                radius: 375 / 2,
+                                                lineWidth: 12,
+                                                progressColor: Theme.of(context).primaryColor,
+                                                percent: (currentDashboard / DASHBOARD_QUOTA),
+                                                center: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Text("Dashboard Quota"),
+                                                    SizedBox(height: 8.0),
+                                                    Text(formatter.format((currentDashboard / DASHBOARD_QUOTA) * 100) +
+                                                        "%"),
+                                                  ],
+                                                ),
+                                                animation: true,
                                               ),
-                                              animation: true,
-                                            ),
-                                          );
-                                        }
-                                        return Container();
-                                      },
-                                    ),
-                                  ],
-                                )
-                              ],
-                            )
-                          ],
+                                            );
+                                          }
+                                          return Container();
+                                        },
+                                      ),
+                                      FutureBuilder(
+                                        future: FirebaseFirestore.instance
+                                            .collection('devices')
+                                            .where('user', isEqualTo: userUid)
+                                            .get(),
+                                        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                          if (snapshot.hasData) {
+                                            var docs = snapshot.data!.docs;
+                                            var currentDevice = docs.length;
+
+                                            final formatter = new NumberFormat("#,###");
+
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: CircularPercentIndicator(
+                                                radius: 375 / 2,
+                                                lineWidth: 12,
+                                                progressColor: Theme.of(context).primaryColor,
+                                                percent: (currentDevice / DEVICE_QUOTA),
+                                                center: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                    Text("Device Quota"),
+                                                    SizedBox(height: 8.0),
+                                                    Text(formatter.format((currentDevice / DEVICE_QUOTA) * 100) + "%"),
+                                                  ],
+                                                ),
+                                                animation: true,
+                                              ),
+                                            );
+                                          }
+                                          return Container();
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

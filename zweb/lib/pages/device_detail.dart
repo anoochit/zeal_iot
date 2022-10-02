@@ -34,165 +34,173 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
   @override
   Widget build(BuildContext context) {
     //double scWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      appBar: AppBar(
-        title: DashboardMenu(),
-        automaticallyImplyLeading: false,
-      ),
-      body: Container(
-          child: Column(
-        children: [
-          Expanded(
-            child: FutureBuilder(
-              future: FirebaseFirestore.instance.collection('devices').doc(widget.deviceId).get(),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasError) {
-                  return Text("Somthing went wrong!");
-                }
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: DashboardMenu(),
+          automaticallyImplyLeading: false,
+        ),
+        body: Container(
+            child: Column(
+          children: [
+            Expanded(
+              child: FutureBuilder(
+                future: FirebaseFirestore.instance.collection('devices').doc(widget.deviceId).get(),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("Somthing went wrong!");
+                  }
 
-                // has device data show device detail
-                if (snapshot.hasData) {
-                  // build list for data table parameter
-                  var deviceData = snapshot.data;
-                  controlField = deviceData['control'];
-                  dataField = deviceData['data'];
-                  // build data grid column
-                  deviceFields.add("timestamp");
-                  // controlField.forEach((element) {
-                  //   log(element);
-                  //   deviceFields.add(element);
-                  // });
-                  dataField.forEach((element) {
-                    //log(element);
-                    deviceFields.add(element);
-                  });
+                  // has device data show device detail
+                  if (snapshot.hasData) {
+                    // build list for data table parameter
+                    var deviceData = snapshot.data;
+                    controlField = deviceData['control'];
+                    dataField = deviceData['data'];
+                    // build data grid column
+                    deviceFields.add("timestamp");
+                    // controlField.forEach((element) {
+                    //   log(element);
+                    //   deviceFields.add(element);
+                    // });
+                    dataField.forEach((element) {
+                      //log(element);
+                      deviceFields.add(element);
+                    });
 
-                  // show device info
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // device title
-                      TextHeader(title: deviceData["name"]),
-                      TextSubHeader(title: deviceData["description"]),
+                    // show device info
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // device title
+                        TextHeader(title: deviceData["name"]),
+                        TextSubHeader(title: deviceData["description"]),
 
-                      // device info
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        child: Card(
-                          shape: kCardBorderRadius,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text("ID : "),
-                                    Chip(
-                                      label: SelectableText(widget.deviceId),
-                                    ),
-                                    IconButton(
-                                      icon: Icon(Icons.copy, size: 16),
-                                      onPressed: () {
-                                        FlutterClipboard.copy(widget.deviceId);
-                                      },
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text("Control : "),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                      child: Wrap(
-                                        children: [
-                                          for (int i = 0; i < controlField.length; i++)
-                                            Chip(
-                                              label: SelectableText(
-                                                controlField[i],
-                                              ),
-                                            ),
-                                        ],
+                        // device info
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          child: Card(
+                            shape: kCardBorderRadius,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text("ID : "),
+                                      Chip(
+                                        label: SelectableText(widget.deviceId),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Text("Data : "),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                      child: Wrap(
-                                        children: [
-                                          for (int i = 0; i < dataField.length; i++)
-                                            Chip(
-                                              label: SelectableText(
-                                                dataField[i],
+                                      IconButton(
+                                        icon: Icon(Icons.copy, size: 16),
+                                        onPressed: () {
+                                          FlutterClipboard.copy(widget.deviceId);
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Control : "),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                        child: Wrap(
+                                          children: [
+                                            for (int i = 0; i < controlField.length; i++)
+                                              Chip(
+                                                label: SelectableText(
+                                                  controlField[i],
+                                                ),
                                               ),
-                                            ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text("Data : "),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                        child: Wrap(
+                                          children: [
+                                            for (int i = 0; i < dataField.length; i++)
+                                              Chip(
+                                                label: SelectableText(
+                                                  dataField[i],
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      // device logs
-                      Expanded(
-                        child: FutureBuilder(
-                          future: FirebaseFirestore.instance.collection('messages').doc(userUid! + "_" + widget.deviceId).collection('log').orderBy('timestamp', descending: true).limit(10).get(),
-                          builder: (BuildContext context, AsyncSnapshot snapshot) {
-                            if (snapshot.hasError) {
-                              return Text("Cannot load device message log");
-                            }
+                        // device logs
+                        Expanded(
+                          child: FutureBuilder(
+                            future: FirebaseFirestore.instance
+                                .collection('messages')
+                                .doc(userUid! + "_" + widget.deviceId)
+                                .collection('log')
+                                .orderBy('timestamp', descending: true)
+                                .limit(10)
+                                .get(),
+                            builder: (BuildContext context, AsyncSnapshot snapshot) {
+                              if (snapshot.hasError) {
+                                return Text("Cannot load device message log");
+                              }
 
-                            if (snapshot.hasData) {
-                              var deviceMessageLog = snapshot.data;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                                child: Card(
-                                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                                  shape: kCardBorderRadius,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: SfDataGrid(
-                                      source: new DeviceDataSource(deviceMessageLog, deviceFields),
-                                      columns: deviceFields.map((field) {
-                                        return GridColumn(
-                                          columnWidthMode: ColumnWidthMode.auto,
-                                          columnName: field,
-                                          label: Container(
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              field,
-                                              style: kTextItemTitle,
+                              if (snapshot.hasData) {
+                                var deviceMessageLog = snapshot.data;
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  child: Card(
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    shape: kCardBorderRadius,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SfDataGrid(
+                                        source: new DeviceDataSource(deviceMessageLog, deviceFields),
+                                        columns: deviceFields.map((field) {
+                                          return GridColumn(
+                                            columnWidthMode: ColumnWidthMode.auto,
+                                            columnName: field,
+                                            label: Container(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                field,
+                                                style: kTextItemTitle,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }).toList(),
+                                          );
+                                        }).toList(),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }
+                                );
+                              }
 
-                            return Center(child: CircularProgressIndicator());
-                          },
+                              return Center(child: CircularProgressIndicator());
+                            },
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                }
+                      ],
+                    );
+                  }
 
-                return Center(child: CircularProgressIndicator());
-              },
+                  return Center(child: CircularProgressIndicator());
+                },
+              ),
             ),
-          ),
-        ],
-      )),
+          ],
+        )),
+      ),
     );
   }
 }
@@ -208,7 +216,10 @@ class DeviceDataSource extends DataGridSource {
               (cellData) {
                 return DataGridCell<String>(
                     columnName: cellData,
-                    value: (cellData == "timestamp") ? DateFormat('dd/MM/yyyy, HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(dataGridRow[cellData] * 1000)) : dataGridRow[cellData].toString());
+                    value: (cellData == "timestamp")
+                        ? DateFormat('dd/MM/yyyy, HH:mm:ss')
+                            .format(DateTime.fromMillisecondsSinceEpoch(dataGridRow[cellData] * 1000))
+                        : dataGridRow[cellData].toString());
               },
             ).toList(),
           ),
