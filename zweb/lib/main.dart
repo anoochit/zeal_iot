@@ -20,8 +20,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Future<FirebaseApp> _initialization = Firebase.initializeApp();
-
   late final _routerDelegate;
 
   @override
@@ -82,23 +80,7 @@ class _MyAppState extends State<MyApp> {
         routerDelegate: _routerDelegate,
         routeInformationParser: BeamerParser(),
         builder: (context, child) {
-          return FutureBuilder(
-            future: _initialization,
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Container(color: Colors.red);
-              }
-              if (snapshot.connectionState == ConnectionState.done) {
-                // this child is the Navigator stack produced by Beamer
-                return child!;
-              }
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
-          );
+          return child!;
         },
       ),
     );
