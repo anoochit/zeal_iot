@@ -921,9 +921,7 @@ class _AddWidgetState extends State<AddWidget> {
                       value: selectWidgetWidth,
                       onChanged: (value) {
                         // set value here
-                        //setState(() {
                         selectWidgetWidth = int.parse(value.toString());
-                        //s});
                       },
                       validator: (value) {
                         if (value == null) {
@@ -957,9 +955,7 @@ class _AddWidgetState extends State<AddWidget> {
                       value: selectWidgetHeight,
                       onChanged: (value) {
                         // set value here
-                        //setState(() {
                         selectWidgetHeight = int.parse(value.toString());
-                        //});
                       },
                       validator: (value) {
                         if (value == null) {
@@ -1024,7 +1020,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 'type': selectWidgetType,
                                 'title': _textInputTitle.text.trim(),
                                 'order': widget.itemCount,
-                              }).then((value) => Navigator.pop(context));
+                              }).then((value) => Get.back());
                             } else if (selectWidgetType == "map") {
                               // create dashboard widget for map type
                               FirebaseFirestore.instance
@@ -1039,7 +1035,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 'type': selectWidgetType,
                                 'title': _textInputTitle.text.trim(),
                                 'order': widget.itemCount,
-                              }).then((value) => Navigator.pop(context));
+                              }).then((value) => Get.back());
                             } else {
                               // create dashboard widget for graph type
                               FirebaseFirestore.instance
@@ -1056,7 +1052,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 'type': selectWidgetType,
                                 'title': _textInputTitle.text.trim(),
                                 'order': widget.itemCount,
-                              }).then((value) => Navigator.pop(context));
+                              }).then((value) => Get.back());
                             }
                           }
                         },
@@ -1066,7 +1062,7 @@ class _AddWidgetState extends State<AddWidget> {
                         style: kElevatedButtonRedButton,
                         child: Text("Close"),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Get.back();
                         },
                       ),
                     ],
