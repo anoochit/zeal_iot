@@ -406,9 +406,7 @@ class _AddDeviceState extends State<AddDevice> {
                         hintText: 'Device name',
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter name";
-                        }
+                        return (value!.isEmpty) ? "Please enter name" : null;
                       },
                     ),
                   ),
@@ -426,9 +424,7 @@ class _AddDeviceState extends State<AddDevice> {
                         hintText: 'Device Description',
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter description";
-                        }
+                        return (value!.isEmpty) ? "Please enter description" : null;
                       },
                     ),
                   ),

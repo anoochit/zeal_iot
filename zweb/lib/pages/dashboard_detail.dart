@@ -802,9 +802,7 @@ class _AddWidgetState extends State<AddWidget> {
                               hintText: 'Min value',
                             ),
                             validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter min value";
-                              }
+                              return (value!.isEmpty) ? "Please enter min value" : null;
                             },
                           ),
                         ),
@@ -826,9 +824,7 @@ class _AddWidgetState extends State<AddWidget> {
                               hintText: 'Max value',
                             ),
                             validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter max value";
-                              }
+                              return (value!.isEmpty) ? "Please enter max value" : null;
                             },
                           ),
                         ),
@@ -850,9 +846,7 @@ class _AddWidgetState extends State<AddWidget> {
                               hintText: 'Unit',
                             ),
                             validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Please enter unit";
-                              }
+                              return (value!.isEmpty) ? "Please enter unit" : null;
                             },
                           ),
                         ),
@@ -945,9 +939,7 @@ class _AddWidgetState extends State<AddWidget> {
                         hintText: 'Title',
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter title";
-                        }
+                        return (value!.isEmpty) ? "Please enter title" : null;
                       },
                     ),
                   ),

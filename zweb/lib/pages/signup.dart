@@ -66,9 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: 'Email',
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter email";
-                        }
+                        return (value!.isEmpty) ? "Please enter email" : null;
                       },
                     ),
                   ),
@@ -92,9 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       obscureText: _visibility,
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter password";
-                        }
+                        return (value!.isEmpty) ? "Please enter password" : null;
                       },
                     ),
                   ),

@@ -54,9 +54,7 @@ class _SignInPageState extends State<SignInPage> {
                         hintText: 'Email',
                       ),
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Please enter email";
-                        }
+                        return (value!.isEmpty) ? "Please enter email" : null;
                       },
                     ),
                   ),
@@ -79,7 +77,9 @@ class _SignInPageState extends State<SignInPage> {
                         ),
                       ),
                       obscureText: _visibility,
-                      validator: (value) {},
+                      validator: (value) {
+                        return (value!.isEmpty) ? "Please enter password" : null;
+                      },
                     ),
                   ),
                   SizedBox(height: 16),
