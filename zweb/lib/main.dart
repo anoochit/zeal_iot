@@ -31,17 +31,23 @@ class _MyAppState extends State<MyApp> {
     // set router delegate
     _routerDelegate = BeamerDelegate(
       initialPath: '/',
-      locationBuilder: (state) => AppLocation(state),
-      guards: [
+      locationBuilder: (p0, p1) => AppLocation(),
+      guards: <BeamGuard>[
         BeamGuard(
-          pathBlueprints: ['/device', '/device/:deviceId', '/dashboard', '/dashboard/:dashboardId', '/profile'],
+          pathPatterns: [
+            '/device',
+            '/device/:deviceId',
+            '/dashboard',
+            '/dashboard/:dashboardId',
+            '/profile',
+          ],
           check: (context, location) => isSignIn() == true,
-          beamToNamed: '/signin',
+          beamToNamed: (origin, target) => '/signin',
         ),
         BeamGuard(
-          pathBlueprints: ['/', '/signin', '/signup', '/document'],
+          pathPatterns: ['/', '/signin', '/signup', '/document'],
           check: (context, location) => isSignIn() == false,
-          beamToNamed: '/dashboard',
+          beamToNamed: (origin, target) => '/dashboard',
         ),
       ],
     );

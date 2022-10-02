@@ -10,10 +10,9 @@ import 'package:zweb/pages/profile.dart';
 import 'package:zweb/pages/signin.dart';
 import 'package:zweb/pages/signup.dart';
 
-class AppLocation extends BeamLocation {
-  AppLocation(BeamState state) : super(state);
+class AppLocation extends BeamLocation<BeamState> {
   @override
-  List<String> get pathBlueprints => [
+  List<Pattern> get pathPatterns => [
         '/',
         '/feature',
         '/document',
@@ -25,6 +24,20 @@ class AppLocation extends BeamLocation {
         '/device',
         '/profile',
       ];
+
+  // @override
+  // List<String> get pathBlueprints => [
+  //       '/',
+  //       '/feature',
+  //       '/document',
+  //       '/signin',
+  //       '/signup',
+  //       '/dashboard',
+  //       '/dashboard/:dashboardId',
+  //       '/device/:deviceId',
+  //       '/device',
+  //       '/profile',
+  //     ];
 
   @override
   List<BeamPage> buildPages(BuildContext context, BeamState state) => [
