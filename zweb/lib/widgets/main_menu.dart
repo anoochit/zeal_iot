@@ -1,10 +1,12 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:zweb/const.dart';
-import 'package:zweb/services/firebase_auth.dart';
+import 'package:zweb/controller/app_controller.dart';
 
 class MainMenu extends StatelessWidget {
-  const MainMenu({Key? key}) : super(key: key);
+  MainMenu({Key? key}) : super(key: key);
+
+  AppController controller = Get.find<AppController>();
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +23,13 @@ class MainMenu extends StatelessWidget {
                 children: [
                   for (int i = 0; i < listMenu.length; i++)
                     (listMenu[i].title.toLowerCase() == "sign in")
-                        ? (isSignIn() == false)
+                        ? (controller.isSignIn() == false)
                             ? ElevatedButton(
                                 style: kElevatedButtonGreenButton,
                                 child: Text(listMenu[i].title, style: TextStyle(fontSize: 16.0)),
                                 onPressed: () {
                                   // sign in button
-                                  context.beamToNamed('/signin');
+                                  Get.toNamed('/signin');
                                 },
                               )
                             : PopupMenuButton(
@@ -43,11 +45,11 @@ class MainMenu extends StatelessWidget {
                                 ],
                                 onSelected: (value) async {
                                   if (value.toString().contains("signout")) {
-                                    await firebaseSignOut().then((value) {
-                                      context.beamToNamed("/signin");
+                                    await controller.firebaseSignOut().then((value) {
+                                      Get.toNamed('/signin');
                                     });
                                   } else {
-                                    context.beamToNamed(value.toString());
+                                    Get.toNamed(value.toString());
                                   }
                                 },
                               )
@@ -57,7 +59,7 @@ class MainMenu extends StatelessWidget {
                               child: Text(listMenu[i].title, style: TextStyle(fontSize: 16.0)),
                             ),
                             onTap: () {
-                              context.beamToNamed(listMenu[i].link);
+                              Get.toNamed(listMenu[i].link);
                             },
                           ),
                 ],
@@ -68,7 +70,7 @@ class MainMenu extends StatelessWidget {
                 itemBuilder: (context) => <PopupMenuEntry>[
                   for (int i = 0; i < listMenu.length; i++)
                     (listMenu[i].title.toLowerCase() == "sign in")
-                        ? (isSignIn() == false)
+                        ? (controller.isSignIn() == false)
                             ? PopupMenuItem<String>(
                                 value: listMenu[i].link,
                                 child: Text(listMenu[i].title),
@@ -84,11 +86,11 @@ class MainMenu extends StatelessWidget {
                 ],
                 onSelected: (value) {
                   if (value.toString().contains("dashboard")) {
-                    firebaseSignOut().then((value) {
-                      context.beamToNamed('/dashboard');
+                    controller.firebaseSignOut().then((value) {
+                      Get.toNamed('/dashboard');
                     });
                   } else {
-                    context.beamToNamed(value.toString());
+                    Get.toNamed(value.toString());
                   }
                 },
               )

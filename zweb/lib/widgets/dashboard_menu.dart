@@ -1,10 +1,12 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:zweb/const.dart';
-import 'package:zweb/services/firebase_auth.dart';
+import 'package:zweb/controller/app_controller.dart';
 
 class DashboardMenu extends StatelessWidget {
-  const DashboardMenu({Key? key}) : super(key: key);
+  DashboardMenu({Key? key}) : super(key: key);
+
+  AppController controller = Get.find<AppController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,15 +26,17 @@ class DashboardMenu extends StatelessWidget {
                             style: kElevatedButtonRedButton,
                             child: Text(listDashboardMenu[i].title),
                             onPressed: () {
-                              firebaseSignOut().then((value) {
-                                context.beamToNamed('/signin');
+                              controller.firebaseSignOut().then((value) {
+                                Get.toNamed('/signin');
                               });
                             },
                           )
                         : InkWell(
-                            child: Container(padding: EdgeInsets.all(16), child: Text(listDashboardMenu[i].title, style: TextStyle(fontSize: 16.0))),
+                            child: Container(
+                                padding: EdgeInsets.all(16),
+                                child: Text(listDashboardMenu[i].title, style: TextStyle(fontSize: 16.0))),
                             onTap: () {
-                              context.beamToNamed(listDashboardMenu[i].link);
+                              Get.toNamed(listDashboardMenu[i].link);
                             },
                           )
                 ],
@@ -48,11 +52,11 @@ class DashboardMenu extends StatelessWidget {
                 ],
                 onSelected: (value) async {
                   if (value.toString().contains("signout")) {
-                    await firebaseSignOut().then((value) {
-                      context.beamToNamed("/signin");
+                    await controller.firebaseSignOut().then((value) {
+                      Get.toNamed("/signin");
                     });
                   } else {
-                    context.beamToNamed(value.toString());
+                    Get.toNamed(value.toString());
                   }
                 },
               )

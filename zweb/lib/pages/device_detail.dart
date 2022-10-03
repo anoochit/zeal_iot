@@ -1,28 +1,25 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import 'package:zweb/const.dart';
-import 'package:zweb/services/user.dart';
+import 'package:zweb/controller/app_controller.dart';
 import 'package:zweb/widgets/dashboard_menu.dart';
 import 'package:zweb/widgets/texsubtheader.dart';
 import 'package:zweb/widgets/textheader.dart';
 
 class DeviceDetailPage extends StatefulWidget {
-  DeviceDetailPage({Key? key, required this.deviceId}) : super(key: key);
-
-  final String deviceId;
+  DeviceDetailPage({Key? key}) : super(key: key);
 
   @override
   _DeviceDetailPageState createState() => _DeviceDetailPageState();
 }
 
 class _DeviceDetailPageState extends State<DeviceDetailPage> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  // get parameter
+  String? deviceId = Get.parameters['id'];
 
   late QuerySnapshot<Object?> deviceMessageLog;
   late List<dynamic> controlField;
@@ -30,6 +27,17 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
   String deviceTitle = "";
 
   List<String> deviceFields = [];
+
+  AppController controller = Get.find<AppController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (deviceId == null) {
+      Get.back();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +53,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: FirebaseFirestore.instance.collection('devices').doc(widget.deviceId).get(),
+                future: FirebaseFirestore.instance.collection('devices').doc(deviceId!).get(),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
                   if (snapshot.hasError) {
                     return Text("Somthing went wrong!");
@@ -89,12 +97,12 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                     children: [
                                       Text("ID : "),
                                       Chip(
-                                        label: SelectableText(widget.deviceId),
+                                        label: SelectableText(deviceId!),
                                       ),
                                       IconButton(
                                         icon: Icon(Icons.copy, size: 16),
                                         onPressed: () {
-                                          FlutterClipboard.copy(widget.deviceId);
+                                          FlutterClipboard.copy(deviceId!);
                                         },
                                       )
                                     ],
@@ -146,7 +154,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                           child: FutureBuilder(
                             future: FirebaseFirestore.instance
                                 .collection('messages')
-                                .doc(userUid! + "_" + widget.deviceId)
+                                .doc(controller.userUid.value + "_" + deviceId!)
                                 .collection('log')
                                 .orderBy('timestamp', descending: true)
                                 .limit(10)

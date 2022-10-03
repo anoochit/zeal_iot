@@ -4,9 +4,10 @@ import 'package:beamer/beamer.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 import 'package:zweb/const.dart';
-import 'package:zweb/services/user.dart';
+import 'package:zweb/controller/app_controller.dart';
 import 'package:zweb/utils/utils.dart';
 import 'package:zweb/widgets/dashboard_menu.dart';
 import 'package:zweb/widgets/textheader.dart';
@@ -19,39 +20,18 @@ class DevicePage extends StatefulWidget {
 }
 
 class _DevicePageState extends State<DevicePage> {
-  int deviceQuota = 0;
-  int currentDevice = 0;
-
-  getQuota() async {
-    var currentDeviceNumber = await FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).get();
-    log('#no of device = ' + currentDeviceNumber.docs.length.toString());
-
-    var userQuota = await FirebaseFirestore.instance.collection('users').doc(userUid).get();
-
-    log('device quota = ' + userQuota['device_quota'].toString());
-
-    setState(() {
-      deviceQuota = userQuota['device_quota'];
-      currentDevice = currentDeviceNumber.docs.length;
-    });
-  }
+  AppController controller = Get.find<AppController>();
 
   creatDevice() {
-    getQuota().then((value) {
-      if (currentDevice < deviceQuota) {
-        // create dashboard dialog
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => Dialog(
-            shape: kCardBorderRadius,
-            insetPadding: EdgeInsets.all(10),
-            child: AddDevice(),
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Dashboard quota exceed!")));
-      }
-    });
+    // create dashboard dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+        shape: kCardBorderRadius,
+        insetPadding: EdgeInsets.all(10),
+        child: AddDevice(),
+      ),
+    );
   }
 
   addDeviceTemplate() {
@@ -116,7 +96,10 @@ class _DevicePageState extends State<DevicePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).snapshots(),
+                    stream: FirebaseFirestore.instance
+                        .collection('devices')
+                        .where('user', isEqualTo: controller.userUid.value)
+                        .snapshots(),
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       // has error
                       if (snapshot.hasError) {
@@ -129,7 +112,8 @@ class _DevicePageState extends State<DevicePage> {
 
                         if (docs.length > 0) {
                           return GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
                             itemCount: docs.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
@@ -153,7 +137,7 @@ class _DevicePageState extends State<DevicePage> {
                                                 ),
                                                 onTap: () {
                                                   // open dashboard
-                                                  context.beamToNamed('/device/' + docs[index].id);
+                                                  Get.toNamed('/device/' + docs[index].id);
                                                 },
                                               ),
                                               Container(
@@ -178,12 +162,16 @@ class _DevicePageState extends State<DevicePage> {
                                               icon: Icon(Icons.more_vert, size: 16),
                                               itemBuilder: (context) => <PopupMenuEntry>[
                                                 PopupMenuItem(child: Text("Info"), value: 'info'),
-                                                PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
+                                                PopupMenuItem(
+                                                    child: Text("Delete", style: kTextWarning), value: 'delete'),
                                               ],
                                               onSelected: (value) {
                                                 if (value == "delete") {
                                                   // delete device
-                                                  FirebaseFirestore.instance.collection('devices').doc(docs[index].id).delete();
+                                                  FirebaseFirestore.instance
+                                                      .collection('devices')
+                                                      .doc(docs[index].id)
+                                                      .delete();
                                                 }
                                                 if (value == "info") {
                                                   // control
@@ -329,6 +317,11 @@ class _AddDeviceState extends State<AddDevice> {
 
   late List<QueryDocumentSnapshot> deviceTemplate;
 
+  AppController controller = Get.find<AppController>();
+
+  TextfieldTagsController _textfieldTagsControlParam = TextfieldTagsController();
+  TextfieldTagsController _textfieldTagsControlValue = TextfieldTagsController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -408,7 +401,9 @@ class _AddDeviceState extends State<AddDevice> {
                         hintText: 'Device name',
                       ),
                       validator: (value) {
-                        return (value!.isEmpty) ? "Please enter name" : null;
+                        if (value!.isEmpty) {
+                          return "Please enter name";
+                        }
                       },
                     ),
                   ),
@@ -426,7 +421,9 @@ class _AddDeviceState extends State<AddDevice> {
                         hintText: 'Device Description',
                       ),
                       validator: (value) {
-                        return (value!.isEmpty) ? "Please enter description" : null;
+                        if (value!.isEmpty) {
+                          return "Please enter description";
+                        }
                       },
                     ),
                   ),
@@ -495,33 +492,77 @@ class _AddDeviceState extends State<AddDevice> {
                               padding: EdgeInsets.all(8),
                               decoration: kContainerRecRoundDecoration,
                               child: TextFieldTags(
+                                textfieldTagsController: _textfieldTagsControlParam,
                                 initialTags: _listTagControlParam,
-                                tagsStyler: TagsStyler(
-                                    tagTextStyle: TextStyle(color: Colors.white),
-                                    tagDecoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    tagCancelIcon: Icon(Icons.cancel, size: 18.0, color: Colors.white),
-                                    tagPadding: const EdgeInsets.all(6.0)),
-                                textFieldStyler: TextFieldStyler(
-                                  textFieldBorder: InputBorder.none,
-                                  hintText: 'Control params',
-                                  helperText: 'Enter params tags',
-                                ),
-                                onTag: (tag) {
-                                  log('onTag: $tag');
-                                  _listTagControlParam.add(tag);
-                                },
-                                onDelete: (tag) {
-                                  log('onDelete: $tag');
-                                  _listTagControlParam.removeWhere((element) => element == tag);
-                                },
+                                textSeparators: const [' ', ','],
+                                letterCase: LetterCase.normal,
+                                // FIXME : validate field when not enter tag
                                 validator: (tag) {
-                                  if (tag.length < 1) {
-                                    return "enter params";
+                                  if (_textfieldTagsControlParam.getTags!.contains(tag)) {
+                                    return 'Already has field';
                                   }
                                   return null;
+                                },
+                                inputfieldBuilder: (context, tec, fn, error, onChanged, onSubmitted) {
+                                  return ((context, sc, tags, onTagDelete) {
+                                    return TextField(
+                                      controller: tec,
+                                      focusNode: fn,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: 'Control params',
+                                        helperText: 'Enter control field',
+                                        errorText: error,
+                                        prefixIcon: tags.isNotEmpty
+                                            ? SingleChildScrollView(
+                                                controller: sc,
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                    children: tags.map((String tag) {
+                                                  return Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(20.0),
+                                                      ),
+                                                      color: Colors.blue,
+                                                    ),
+                                                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        InkWell(
+                                                          child: Text(
+                                                            ' $tag',
+                                                            style: const TextStyle(color: Colors.white),
+                                                          ),
+                                                          onTap: () {
+                                                            //print("$tag selected");
+                                                          },
+                                                        ),
+                                                        const SizedBox(width: 4.0),
+                                                        InkWell(
+                                                          child: const Icon(
+                                                            Icons.cancel,
+                                                            size: 14.0,
+                                                            color: Color.fromARGB(255, 233, 233, 233),
+                                                          ),
+                                                          onTap: () {
+                                                            onTagDelete(tag);
+                                                          },
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }).toList()),
+                                              )
+                                            : null,
+                                      ),
+                                      onChanged: onChanged,
+                                      onSubmitted: onSubmitted,
+                                    );
+                                  });
                                 },
                               ),
                             ),
@@ -532,33 +573,77 @@ class _AddDeviceState extends State<AddDevice> {
                               padding: EdgeInsets.all(8),
                               decoration: kContainerRecRoundDecoration,
                               child: TextFieldTags(
+                                textfieldTagsController: _textfieldTagsControlValue,
                                 initialTags: _listTagValueParam,
-                                tagsStyler: TagsStyler(
-                                    tagTextStyle: TextStyle(color: Colors.white),
-                                    tagDecoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    tagCancelIcon: Icon(Icons.cancel, size: 18.0, color: Colors.white),
-                                    tagPadding: const EdgeInsets.all(6.0)),
-                                textFieldStyler: TextFieldStyler(
-                                  textFieldBorder: InputBorder.none,
-                                  hintText: 'Data params',
-                                  helperText: 'Enter params tags',
-                                ),
-                                onTag: (tag) {
-                                  log('onTag: $tag');
-                                  _listTagValueParam.add(tag);
-                                },
-                                onDelete: (tag) {
-                                  log('onDelete: $tag');
-                                  _listTagValueParam.removeWhere((element) => element.contains(tag));
-                                },
+                                textSeparators: const [' ', ','],
+                                letterCase: LetterCase.normal,
+                                // FIXME : validate field when not enter tag
                                 validator: (tag) {
-                                  if (tag.length < 1) {
-                                    return "enter params";
+                                  if (_textfieldTagsControlParam.getTags!.contains(tag)) {
+                                    return 'Already has field';
                                   }
                                   return null;
+                                },
+                                inputfieldBuilder: (context, tev, fnv, error, onChanged, onSubmitted) {
+                                  return ((context, sc, tags, onTagDelete) {
+                                    return TextField(
+                                      controller: tev,
+                                      focusNode: fnv,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: 'Data params',
+                                        helperText: 'Enter value field',
+                                        errorText: error,
+                                        prefixIcon: tags.isNotEmpty
+                                            ? SingleChildScrollView(
+                                                controller: sc,
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                    children: tags.map((String tag) {
+                                                  return Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(20.0),
+                                                      ),
+                                                      color: Colors.blue,
+                                                    ),
+                                                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        InkWell(
+                                                          child: Text(
+                                                            ' $tag',
+                                                            style: const TextStyle(color: Colors.white),
+                                                          ),
+                                                          onTap: () {
+                                                            //print("$tag selected");
+                                                          },
+                                                        ),
+                                                        const SizedBox(width: 4.0),
+                                                        InkWell(
+                                                          child: const Icon(
+                                                            Icons.cancel,
+                                                            size: 14.0,
+                                                            color: Color.fromARGB(255, 233, 233, 233),
+                                                          ),
+                                                          onTap: () {
+                                                            onTagDelete(tag);
+                                                          },
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }).toList()),
+                                              )
+                                            : null,
+                                      ),
+                                      onChanged: onChanged,
+                                      onSubmitted: onSubmitted,
+                                    );
+                                  });
                                 },
                               ),
                             ),
@@ -584,30 +669,29 @@ class _AddDeviceState extends State<AddDevice> {
                             FirebaseFirestore.instance.collection('devices').add({
                               'name': _textInputDeviceName.text.trim(),
                               'description': _textInputDeviceDescription.text.trim(),
-                              'user': userUid,
+                              'user': controller.userUid.value,
                               'control': docControl,
                               'data': docData,
                             }).then(
-                              (value) => Navigator.pop(context),
+                              (value) => Get.back(),
                             );
                           }
                         } else {
                           // create device by custom param
                           if (_formKey.currentState!.validate()) {
                             log("submit device by params");
-                            if (_listTagValueParam.isEmpty || _listTagControlParam.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter Params")));
-                            } else {
-                              FirebaseFirestore.instance.collection('devices').add({
-                                'name': _textInputDeviceName.text.trim(),
-                                'description': _textInputDeviceDescription.text.trim(),
-                                'user': userUid,
-                                'control': _listTagControlParam,
-                                'data': _listTagValueParam,
-                              }).then(
-                                (value) => Navigator.pop(context),
-                              );
-                            }
+                            log('${_textfieldTagsControlParam.getTags}');
+                            log('${_textfieldTagsControlValue.getTags}');
+
+                            FirebaseFirestore.instance.collection('devices').add({
+                              'name': _textInputDeviceName.text.trim(),
+                              'description': _textInputDeviceDescription.text.trim(),
+                              'user': controller.userUid.value,
+                              'control': _listTagControlParam,
+                              'data': _listTagValueParam,
+                            }).then(
+                              (value) => Get.back(),
+                            );
                           }
                         }
                       },
@@ -617,7 +701,7 @@ class _AddDeviceState extends State<AddDevice> {
                       style: kElevatedButtonRedButton,
                       child: Text("Close"),
                       onPressed: () {
-                        Navigator.pop(context);
+                        Get.back();
                       },
                     ),
                   ],

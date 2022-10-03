@@ -2,30 +2,28 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:zweb/const.dart';
-import 'package:zweb/services/user.dart';
+import 'package:zweb/controller/app_controller.dart';
 import 'package:zweb/widgets/dashboard_menu.dart';
 import 'package:zweb/widgets/dashboard_widget.dart';
 import 'package:zweb/widgets/line.dart';
 import 'package:zweb/widgets/textheader.dart';
 
 class DashboardDetailPage extends StatefulWidget {
-  DashboardDetailPage({Key? key, required this.dashboardId}) : super(key: key);
-
-  final String dashboardId;
+  DashboardDetailPage({Key? key}) : super(key: key);
 
   @override
   _DashboardDetailPageState createState() => _DashboardDetailPageState();
 }
 
 class _DashboardDetailPageState extends State<DashboardDetailPage> {
+  String dashboardId = Get.parameters['id']!;
+
   @override
   Widget build(BuildContext context) {
-    String dashboardId = widget.dashboardId.toString();
-
-    log("uid -> " + userUid.toString());
-    log("dashboardId -> " + widget.dashboardId);
+    log("dashboardId -> " + dashboardId);
 
     return SelectionArea(
       child: Scaffold(
@@ -606,6 +604,8 @@ class _AddWidgetState extends State<AddWidget> {
   TextEditingController _textInputWidgetMax = TextEditingController();
   TextEditingController _textInputWidgetUnit = TextEditingController();
 
+  AppController controller = Get.find<AppController>();
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -665,7 +665,10 @@ class _AddWidgetState extends State<AddWidget> {
                 ),
 
                 FutureBuilder(
-                  future: FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: userUid).get(),
+                  future: FirebaseFirestore.instance
+                      .collection('devices')
+                      .where('user', isEqualTo: controller.userUid.value)
+                      .get(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       var deviceDocs = snapshot.data!.docs;
@@ -912,9 +915,7 @@ class _AddWidgetState extends State<AddWidget> {
                       value: selectWidgetWidth,
                       onChanged: (value) {
                         // set value here
-                        //setState(() {
                         selectWidgetWidth = int.parse(value.toString());
-                        //s});
                       },
                       validator: (value) {
                         if (value == null) {
@@ -948,9 +949,7 @@ class _AddWidgetState extends State<AddWidget> {
                       value: selectWidgetHeight,
                       onChanged: (value) {
                         // set value here
-                        //setState(() {
                         selectWidgetHeight = int.parse(value.toString());
-                        //});
                       },
                       validator: (value) {
                         if (value == null) {
@@ -997,7 +996,7 @@ class _AddWidgetState extends State<AddWidget> {
                               // create field in device message
                               FirebaseFirestore.instance
                                   .collection('messages')
-                                  .doc(userUid! + "_" + selectWidgetId!)
+                                  .doc(controller.userUid.value + "_" + selectWidgetId!)
                                   .update({
                                 selectWidgetField.toString(): false,
                               });
@@ -1007,13 +1006,13 @@ class _AddWidgetState extends State<AddWidget> {
                                   .doc(widget.dashboardId)
                                   .collection('items')
                                   .add({
-                                'data': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
+                                'data': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
                                 'type': selectWidgetType,
                                 'title': _textInputTitle.text.trim(),
                                 'order': widget.itemCount,
-                              }).then((value) => Navigator.pop(context));
+                              }).then((value) => Get.back());
                             } else if (selectWidgetType == "map") {
                               // create dashboard widget for map type
                               FirebaseFirestore.instance
@@ -1021,14 +1020,14 @@ class _AddWidgetState extends State<AddWidget> {
                                   .doc(widget.dashboardId)
                                   .collection('items')
                                   .add({
-                                'data1': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
-                                'data2': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField2!,
+                                'data1': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField!,
+                                'data2': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField2!,
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
                                 'type': selectWidgetType,
                                 'title': _textInputTitle.text.trim(),
                                 'order': widget.itemCount,
-                              }).then((value) => Navigator.pop(context));
+                              }).then((value) => Get.back());
                             } else {
                               // create dashboard widget for graph type
                               FirebaseFirestore.instance
@@ -1036,7 +1035,7 @@ class _AddWidgetState extends State<AddWidget> {
                                   .doc(widget.dashboardId)
                                   .collection('items')
                                   .add({
-                                'data': userUid! + "_" + selectWidgetId! + "/" + selectWidgetField!,
+                                'data': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField!,
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
                                 'min': double.parse(_textInputWidgetMin.text.trim()),
@@ -1045,7 +1044,7 @@ class _AddWidgetState extends State<AddWidget> {
                                 'type': selectWidgetType,
                                 'title': _textInputTitle.text.trim(),
                                 'order': widget.itemCount,
-                              }).then((value) => Navigator.pop(context));
+                              }).then((value) => Get.back());
                             }
                           }
                         },
@@ -1055,7 +1054,7 @@ class _AddWidgetState extends State<AddWidget> {
                         style: kElevatedButtonRedButton,
                         child: Text("Close"),
                         onPressed: () {
-                          Navigator.pop(context);
+                          Get.back();
                         },
                       ),
                     ],

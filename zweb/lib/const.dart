@@ -1,5 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import 'package:zweb/middleware/routeguard.dart';
+import 'package:zweb/pages/authgate.dart';
+import 'package:zweb/pages/dashboard.dart';
+import 'package:zweb/pages/dashboard_detail.dart';
+import 'package:zweb/pages/device.dart';
+import 'package:zweb/pages/device_detail.dart';
+import 'package:zweb/pages/document.dart';
+import 'package:zweb/pages/home.dart';
+import 'package:zweb/pages/profile.dart';
+
+FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 class Menu {
   final String title;
@@ -69,5 +84,83 @@ final kElevatedButtonGreenButton = ElevatedButton.styleFrom(backgroundColor: Col
 final kElevatedButtonPinkButton = ElevatedButton.styleFrom(backgroundColor: Colors.pink);
 final kElevatedButtonAmberButton = ElevatedButton.styleFrom(backgroundColor: Colors.amber);
 
-final kCardBorderRadius =
-    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
+final kCardBorderRadius = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
+
+final defaultAvatar = "https://via.placeholder.com/150";
+
+final themeData = ThemeData(
+  primarySwatch: kPrimarySwatch,
+  canvasColor: Colors.white,
+  inputDecorationTheme: InputDecorationTheme(
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+  ),
+  outlinedButtonTheme: OutlinedButtonThemeData(
+    style: ButtonStyle(
+      padding: MaterialStateProperty.all<EdgeInsets>(
+        const EdgeInsets.all(24),
+      ),
+      shape: MaterialStateProperty.all<OutlinedBorder>(kCardBorderRadius),
+      // backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+      // foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    ),
+  ),
+);
+
+// route
+
+final getPages = [
+  GetPage(
+    name: "/",
+    page: () => HomePage(),
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/document",
+    page: () => DocumentPage(),
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/signin",
+    page: () => AuthGate(),
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/dashboard",
+    page: () => DashboardPage(),
+    middlewares: [
+      RouteGuard(),
+    ],
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/dashboard/:id",
+    page: () => DashboardDetailPage(),
+    middlewares: [
+      RouteGuard(),
+    ],
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/device",
+    page: () => DevicePage(),
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/device/:id",
+    page: () => DeviceDetailPage(),
+    middlewares: [
+      RouteGuard(),
+    ],
+    transition: Transition.noTransition,
+  ),
+  GetPage(
+    name: "/profile",
+    page: () => ProfilePage(),
+    middlewares: [
+      RouteGuard(),
+    ],
+    transition: Transition.noTransition,
+  ),
+];
