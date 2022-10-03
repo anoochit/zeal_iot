@@ -266,9 +266,7 @@ class _CreateDashboardState extends State<CreateDashboard> {
                       hintText: 'Title',
                     ),
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter title";
-                      }
+                      return (value!.isEmpty) ? "Please enter title" : null;
                     },
                   ),
                 ),
@@ -286,9 +284,7 @@ class _CreateDashboardState extends State<CreateDashboard> {
                     ),
                     maxLines: 3,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Please enter description";
-                      }
+                      return (value!.isEmpty) ? "Please enter description" : null;
                     },
                   ),
                 ),

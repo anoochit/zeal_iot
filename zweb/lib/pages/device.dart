@@ -96,10 +96,7 @@ class _DevicePageState extends State<DevicePage> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('devices')
-                        .where('user', isEqualTo: controller.userUid.value)
-                        .snapshots(),
+                    stream: FirebaseFirestore.instance.collection('devices').where('user', isEqualTo: controller.userUid.value).snapshots(),
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       // has error
                       if (snapshot.hasError) {
@@ -112,8 +109,7 @@ class _DevicePageState extends State<DevicePage> {
 
                         if (docs.length > 0) {
                           return GridView.builder(
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
                             itemCount: docs.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Container(
@@ -162,16 +158,12 @@ class _DevicePageState extends State<DevicePage> {
                                               icon: Icon(Icons.more_vert, size: 16),
                                               itemBuilder: (context) => <PopupMenuEntry>[
                                                 PopupMenuItem(child: Text("Info"), value: 'info'),
-                                                PopupMenuItem(
-                                                    child: Text("Delete", style: kTextWarning), value: 'delete'),
+                                                PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
                                               ],
                                               onSelected: (value) {
                                                 if (value == "delete") {
                                                   // delete device
-                                                  FirebaseFirestore.instance
-                                                      .collection('devices')
-                                                      .doc(docs[index].id)
-                                                      .delete();
+                                                  FirebaseFirestore.instance.collection('devices').doc(docs[index].id).delete();
                                                 }
                                                 if (value == "info") {
                                                   // control
@@ -682,16 +674,19 @@ class _AddDeviceState extends State<AddDevice> {
                             log("submit device by params");
                             log('${_textfieldTagsControlParam.getTags}');
                             log('${_textfieldTagsControlValue.getTags}');
-
-                            FirebaseFirestore.instance.collection('devices').add({
-                              'name': _textInputDeviceName.text.trim(),
-                              'description': _textInputDeviceDescription.text.trim(),
-                              'user': controller.userUid.value,
-                              'control': _listTagControlParam,
-                              'data': _listTagValueParam,
-                            }).then(
-                              (value) => Get.back(),
-                            );
+                            if (_textfieldTagsControlParam.getTags!.isEmpty || _textfieldTagsControlValue.getTags!.isEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Enter Params")));
+                            } else {
+                              FirebaseFirestore.instance.collection('devices').add({
+                                'name': _textInputDeviceName.text.trim(),
+                                'description': _textInputDeviceDescription.text.trim(),
+                                'user': controller.userUid.value,
+                                'control': _listTagControlParam,
+                                'data': _listTagValueParam,
+                              }).then(
+                                (value) => Get.back(),
+                              );
+                            }
                           }
                         }
                       },
