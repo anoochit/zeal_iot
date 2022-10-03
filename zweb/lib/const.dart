@@ -102,8 +102,8 @@ final themeData = ThemeData(
         const EdgeInsets.all(24),
       ),
       shape: MaterialStateProperty.all<OutlinedBorder>(kCardBorderRadius),
-      backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
-      foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+      // backgroundColor: MaterialStateProperty.all<Color>(Colors.blue),
+      // foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
     ),
   ),
 );

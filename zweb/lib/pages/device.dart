@@ -319,6 +319,9 @@ class _AddDeviceState extends State<AddDevice> {
 
   AppController controller = Get.find<AppController>();
 
+  TextfieldTagsController _textfieldTagsControlParam = TextfieldTagsController();
+  TextfieldTagsController _textfieldTagsControlValue = TextfieldTagsController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -489,33 +492,77 @@ class _AddDeviceState extends State<AddDevice> {
                               padding: EdgeInsets.all(8),
                               decoration: kContainerRecRoundDecoration,
                               child: TextFieldTags(
+                                textfieldTagsController: _textfieldTagsControlParam,
                                 initialTags: _listTagControlParam,
-                                tagsStyler: TagsStyler(
-                                    tagTextStyle: TextStyle(color: Colors.white),
-                                    tagDecoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    tagCancelIcon: Icon(Icons.cancel, size: 18.0, color: Colors.white),
-                                    tagPadding: const EdgeInsets.all(6.0)),
-                                textFieldStyler: TextFieldStyler(
-                                  textFieldBorder: InputBorder.none,
-                                  hintText: 'Control params',
-                                  helperText: 'Enter params tags',
-                                ),
-                                onTag: (tag) {
-                                  log('onTag: $tag');
-                                  _listTagControlParam.add(tag);
-                                },
-                                onDelete: (tag) {
-                                  log('onDelete: $tag');
-                                  _listTagControlParam.removeWhere((element) => element == tag);
-                                },
+                                textSeparators: const [' ', ','],
+                                letterCase: LetterCase.normal,
+                                // FIXME : validate field when not enter tag
                                 validator: (tag) {
-                                  if (tag.length < 1) {
-                                    return "enter params";
+                                  if (_textfieldTagsControlParam.getTags!.contains(tag)) {
+                                    return 'Already has field';
                                   }
                                   return null;
+                                },
+                                inputfieldBuilder: (context, tec, fn, error, onChanged, onSubmitted) {
+                                  return ((context, sc, tags, onTagDelete) {
+                                    return TextField(
+                                      controller: tec,
+                                      focusNode: fn,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: 'Control params',
+                                        helperText: 'Enter control field',
+                                        errorText: error,
+                                        prefixIcon: tags.isNotEmpty
+                                            ? SingleChildScrollView(
+                                                controller: sc,
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                    children: tags.map((String tag) {
+                                                  return Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(20.0),
+                                                      ),
+                                                      color: Colors.blue,
+                                                    ),
+                                                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        InkWell(
+                                                          child: Text(
+                                                            ' $tag',
+                                                            style: const TextStyle(color: Colors.white),
+                                                          ),
+                                                          onTap: () {
+                                                            //print("$tag selected");
+                                                          },
+                                                        ),
+                                                        const SizedBox(width: 4.0),
+                                                        InkWell(
+                                                          child: const Icon(
+                                                            Icons.cancel,
+                                                            size: 14.0,
+                                                            color: Color.fromARGB(255, 233, 233, 233),
+                                                          ),
+                                                          onTap: () {
+                                                            onTagDelete(tag);
+                                                          },
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }).toList()),
+                                              )
+                                            : null,
+                                      ),
+                                      onChanged: onChanged,
+                                      onSubmitted: onSubmitted,
+                                    );
+                                  });
                                 },
                               ),
                             ),
@@ -526,33 +573,77 @@ class _AddDeviceState extends State<AddDevice> {
                               padding: EdgeInsets.all(8),
                               decoration: kContainerRecRoundDecoration,
                               child: TextFieldTags(
+                                textfieldTagsController: _textfieldTagsControlValue,
                                 initialTags: _listTagValueParam,
-                                tagsStyler: TagsStyler(
-                                    tagTextStyle: TextStyle(color: Colors.white),
-                                    tagDecoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    tagCancelIcon: Icon(Icons.cancel, size: 18.0, color: Colors.white),
-                                    tagPadding: const EdgeInsets.all(6.0)),
-                                textFieldStyler: TextFieldStyler(
-                                  textFieldBorder: InputBorder.none,
-                                  hintText: 'Data params',
-                                  helperText: 'Enter params tags',
-                                ),
-                                onTag: (tag) {
-                                  log('onTag: $tag');
-                                  _listTagValueParam.add(tag);
-                                },
-                                onDelete: (tag) {
-                                  log('onDelete: $tag');
-                                  _listTagValueParam.removeWhere((element) => element.contains(tag));
-                                },
+                                textSeparators: const [' ', ','],
+                                letterCase: LetterCase.normal,
+                                // FIXME : validate field when not enter tag
                                 validator: (tag) {
-                                  if (tag.length < 1) {
-                                    return "enter params";
+                                  if (_textfieldTagsControlParam.getTags!.contains(tag)) {
+                                    return 'Already has field';
                                   }
                                   return null;
+                                },
+                                inputfieldBuilder: (context, tev, fnv, error, onChanged, onSubmitted) {
+                                  return ((context, sc, tags, onTagDelete) {
+                                    return TextField(
+                                      controller: tev,
+                                      focusNode: fnv,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        border: InputBorder.none,
+                                        hintText: 'Data params',
+                                        helperText: 'Enter value field',
+                                        errorText: error,
+                                        prefixIcon: tags.isNotEmpty
+                                            ? SingleChildScrollView(
+                                                controller: sc,
+                                                scrollDirection: Axis.horizontal,
+                                                child: Row(
+                                                    children: tags.map((String tag) {
+                                                  return Container(
+                                                    decoration: const BoxDecoration(
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(20.0),
+                                                      ),
+                                                      color: Colors.blue,
+                                                    ),
+                                                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                                    padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        InkWell(
+                                                          child: Text(
+                                                            ' $tag',
+                                                            style: const TextStyle(color: Colors.white),
+                                                          ),
+                                                          onTap: () {
+                                                            //print("$tag selected");
+                                                          },
+                                                        ),
+                                                        const SizedBox(width: 4.0),
+                                                        InkWell(
+                                                          child: const Icon(
+                                                            Icons.cancel,
+                                                            size: 14.0,
+                                                            color: Color.fromARGB(255, 233, 233, 233),
+                                                          ),
+                                                          onTap: () {
+                                                            onTagDelete(tag);
+                                                          },
+                                                        )
+                                                      ],
+                                                    ),
+                                                  );
+                                                }).toList()),
+                                              )
+                                            : null,
+                                      ),
+                                      onChanged: onChanged,
+                                      onSubmitted: onSubmitted,
+                                    );
+                                  });
                                 },
                               ),
                             ),
@@ -589,6 +680,8 @@ class _AddDeviceState extends State<AddDevice> {
                           // create device by custom param
                           if (_formKey.currentState!.validate()) {
                             log("submit device by params");
+                            log('${_textfieldTagsControlParam.getTags}');
+                            log('${_textfieldTagsControlValue.getTags}');
 
                             FirebaseFirestore.instance.collection('devices').add({
                               'name': _textInputDeviceName.text.trim(),

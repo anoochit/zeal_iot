@@ -44,7 +44,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.3.47
   syncfusion_flutter_datagrid: ^20.3.47
   syncfusion_flutter_gauges: ^20.3.47
-  textfield_tags: ^1.0.0
+  textfield_tags: ^2.0.2
   url_launcher: ^6.1.6
   url_strategy: ^0.2.0
 
