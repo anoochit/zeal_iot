@@ -25,33 +25,31 @@ class _DashboardDetailPageState extends State<DashboardDetailPage> {
   Widget build(BuildContext context) {
     log("dashboardId -> " + dashboardId);
 
-    return SelectionArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: DashboardMenu(),
-          automaticallyImplyLeading: false,
-        ),
-        body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('dashboards').doc(dashboardId).snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            // has error
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Something went wrong!'),
-              );
-            }
-
-            // has data
-            if (snapshot.hasData) {
-              return DashboardDetail(data: snapshot.data);
-            }
-
-            // wait snapshot
+    return Scaffold(
+      appBar: AppBar(
+        title: DashboardMenu(),
+        automaticallyImplyLeading: false,
+      ),
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('dashboards').doc(dashboardId).snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          // has error
+          if (snapshot.hasError) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: Text('Something went wrong!'),
             );
-          },
-        ),
+          }
+
+          // has data
+          if (snapshot.hasData) {
+            return DashboardDetail(data: snapshot.data);
+          }
+
+          // wait snapshot
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
