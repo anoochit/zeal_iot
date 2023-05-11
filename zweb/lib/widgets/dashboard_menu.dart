@@ -3,9 +3,14 @@ import 'package:get/get.dart';
 import 'package:zweb/const.dart';
 import 'package:zweb/controller/app_controller.dart';
 
-class DashboardMenu extends StatelessWidget {
-  DashboardMenu({Key? key}) : super(key: key);
+class DashboardMenu extends StatefulWidget {
+  const DashboardMenu({Key? key}) : super(key: key);
 
+  @override
+  State<DashboardMenu> createState() => _DashboardMenuState();
+}
+
+class _DashboardMenuState extends State<DashboardMenu> {
   AppController controller = Get.find<AppController>();
 
   @override
@@ -13,9 +18,9 @@ class DashboardMenu extends StatelessWidget {
     double scWidth = MediaQuery.of(context).size.width;
     return Row(
       children: [
-        Icon(Icons.memory, size: 32),
-        Text("Zeal IoT"),
-        Spacer(),
+        const Icon(Icons.memory, size: 32),
+        const Text("Zeal IoT"),
+        const Spacer(),
         (scWidth > 510)
             ? Flex(
                 direction: Axis.horizontal,
@@ -33,8 +38,9 @@ class DashboardMenu extends StatelessWidget {
                           )
                         : InkWell(
                             child: Container(
-                                padding: EdgeInsets.all(16),
-                                child: Text(listDashboardMenu[i].title, style: TextStyle(fontSize: 16.0))),
+                                padding: const EdgeInsets.all(16),
+                                child: Text(listDashboardMenu[i].title,
+                                    style: const TextStyle(fontSize: 16.0))),
                             onTap: () {
                               Get.toNamed(listDashboardMenu[i].link);
                             },
@@ -42,7 +48,7 @@ class DashboardMenu extends StatelessWidget {
                 ],
               )
             : PopupMenuButton(
-                child: Icon(Icons.menu),
+                child: const Icon(Icons.menu),
                 itemBuilder: (context) => <PopupMenuEntry>[
                   for (int i = 0; i < listDashboardMenu.length; i++)
                     PopupMenuItem<String>(

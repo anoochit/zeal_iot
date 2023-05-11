@@ -3,9 +3,14 @@ import 'package:get/get.dart';
 import 'package:zweb/const.dart';
 import 'package:zweb/controller/app_controller.dart';
 
-class MainMenu extends StatelessWidget {
-  MainMenu({Key? key}) : super(key: key);
+class MainMenu extends StatefulWidget {
+  const MainMenu({Key? key}) : super(key: key);
 
+  @override
+  State<MainMenu> createState() => _MainMenuState();
+}
+
+class _MainMenuState extends State<MainMenu> {
   AppController controller = Get.find<AppController>();
 
   @override
@@ -14,9 +19,9 @@ class MainMenu extends StatelessWidget {
 
     return Row(
       children: [
-        Icon(Icons.memory, size: 32),
-        Text("Zeal IoT"),
-        Spacer(),
+        const Icon(Icons.memory, size: 32),
+        const Text("Zeal IoT"),
+        const Spacer(),
         (scWidth > 660)
             ? Flex(
                 direction: Axis.horizontal,
@@ -26,18 +31,21 @@ class MainMenu extends StatelessWidget {
                         ? (controller.isSignIn() == false)
                             ? ElevatedButton(
                                 style: kElevatedButtonGreenButton,
-                                child: Text(listMenu[i].title, style: TextStyle(fontSize: 16.0)),
+                                child: Text(listMenu[i].title,
+                                    style: const TextStyle(fontSize: 16.0)),
                                 onPressed: () {
                                   // sign in button
                                   Get.toNamed('/signin');
                                 },
                               )
                             : PopupMenuButton(
-                                child: CircleAvatar(
+                                child: const CircleAvatar(
                                   child: Icon(Icons.account_circle, size: 32),
                                 ),
                                 itemBuilder: (context) => <PopupMenuEntry>[
-                                  for (int i = 0; i < listDashboardMenu.length; i++)
+                                  for (int i = 0;
+                                      i < listDashboardMenu.length;
+                                      i++)
                                     PopupMenuItem<String>(
                                       value: listDashboardMenu[i].link,
                                       child: Text(listDashboardMenu[i].title),
@@ -45,7 +53,9 @@ class MainMenu extends StatelessWidget {
                                 ],
                                 onSelected: (value) async {
                                   if (value.toString().contains("signout")) {
-                                    await controller.firebaseSignOut().then((value) {
+                                    await controller
+                                        .firebaseSignOut()
+                                        .then((value) {
                                       Get.toNamed('/signin');
                                     });
                                   } else {
@@ -55,8 +65,9 @@ class MainMenu extends StatelessWidget {
                               )
                         : InkWell(
                             child: Container(
-                              padding: EdgeInsets.all(16),
-                              child: Text(listMenu[i].title, style: TextStyle(fontSize: 16.0)),
+                              padding: const EdgeInsets.all(16),
+                              child: Text(listMenu[i].title,
+                                  style: const TextStyle(fontSize: 16.0)),
                             ),
                             onTap: () {
                               Get.toNamed(listMenu[i].link);
@@ -66,7 +77,7 @@ class MainMenu extends StatelessWidget {
               )
             // show popupmenu if in mobile size
             : PopupMenuButton(
-                icon: Icon(Icons.menu),
+                icon: const Icon(Icons.menu),
                 itemBuilder: (context) => <PopupMenuEntry>[
                   for (int i = 0; i < listMenu.length; i++)
                     (listMenu[i].title.toLowerCase() == "sign in")
@@ -75,7 +86,7 @@ class MainMenu extends StatelessWidget {
                                 value: listMenu[i].link,
                                 child: Text(listMenu[i].title),
                               )
-                            : PopupMenuItem<String>(
+                            : const PopupMenuItem<String>(
                                 value: '/dashboard',
                                 child: Text("Dashboard"),
                               )

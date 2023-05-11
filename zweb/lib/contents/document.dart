@@ -7,57 +7,57 @@ class DocumentContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: 1024,
         child: LayoutBuilder(
           builder: (context, constraints) => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
               Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
                   Container(
                     width: 1024 / 2,
-                    padding: EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           "Document",
-                          style: Theme.of(context).textTheme.headline4,
+                          style: Theme.of(context).textTheme.headlineMedium,
                         ),
-                        SizedBox(height: 16.0),
+                        const SizedBox(height: 16.0),
                         Text(
                           "Zeal IoT has 2 parts; a progressive web application, stores data on Cloud services, and an edge/embedded system on IoT devices.",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Text(
                           "The document has 2 parts",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Text(
                           "1. Administrator document for deploying / managing Zeal IoT on Cloud services.",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        SizedBox(height: 8.0),
+                        const SizedBox(height: 8.0),
                         Text(
                           "2. Embedded developers, write firmware or ETL script to push data to Zeal IoT.",
-                          style: Theme.of(context).textTheme.bodyText2,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        SizedBox(height: 16.0),
+                        const SizedBox(height: 16.0),
                         ElevatedButton(
                             onPressed: () {
                               launchURL("https://github.com/anoochit/zeal_iot/blob/master/doc/index.md");
                             },
-                            child: Text("Goto document page"))
+                            child: const Text("Goto document page"))
                       ],
                     ),
                   ),
-                  Container(width: (1024 / 2), child: Image.asset('assets/images/undraw_my_files_swob.png')),
+                  SizedBox(width: (1024 / 2), child: Image.asset('assets/images/undraw_my_files_swob.png')),
                 ],
               ),
               // Container(

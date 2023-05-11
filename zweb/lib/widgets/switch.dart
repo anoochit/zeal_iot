@@ -40,41 +40,41 @@ class _SwitchWidgetState extends State<SwitchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var _constrainWidth = widget.width;
-    var _offset = widget.offset;
+    var constrainWidth = widget.width;
+    var offset = widget.offset;
 
     // if mobile overide width to 4 grid
     if ((MediaQuery.of(context).size.width > 960)) {
-      _offset = widget.offset;
+      offset = widget.offset;
     } else if ((MediaQuery.of(context).size.width < 412)) {
-      _constrainWidth = 4;
-      _offset = 0;
+      constrainWidth = 4;
+      offset = 0;
     }
 
-    if (_constrainWidth == 2) {
-      _offset = widget.offset - 16;
+    if (constrainWidth == 2) {
+      offset = widget.offset - 16;
     }
 
-    if (_constrainWidth == 3) {
-      _offset = widget.offset - 20;
+    if (constrainWidth == 3) {
+      offset = widget.offset - 20;
     }
 
-    if (_constrainWidth == 4) {
-      _offset = 0;
+    if (constrainWidth == 4) {
+      offset = 0;
     }
 
-    var _width = MediaQuery.of(context).size.width - _offset;
-    var _height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width - offset;
+    var height = MediaQuery.of(context).size.height;
 
-    var _containerWidth = ((_width * ((0.25) * _constrainWidth)));
-    var _containerHeight = ((_height * ((0.25) * widget.height)));
+    var containerWidth = ((width * ((0.25) * constrainWidth)));
+    var containerHeight = ((height * ((0.25) * widget.height)));
 
     return Card(
       shape: kCardBorderRadius,
       child: Container(
-          width: _containerWidth,
-          height: _containerHeight,
-          decoration: BoxDecoration(),
+          width: containerWidth,
+          height: containerHeight,
+          decoration: const BoxDecoration(),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Stack(
             children: [
@@ -83,9 +83,9 @@ class _SwitchWidgetState extends State<SwitchWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(widget.title),
-                    Container(
-                      width: _containerWidth * 0.8,
-                      height: _containerHeight * 0.8,
+                    SizedBox(
+                      width: containerWidth * 0.8,
+                      height: containerHeight * 0.8,
                       child: FlutterSwitch(
                         width: 125.0,
                         height: 55.0,
@@ -95,10 +95,10 @@ class _SwitchWidgetState extends State<SwitchWidget> {
                         padding: 8.0,
                         showOnOff: true,
                         value: switchValue,
-                        onToggle: (bool _value) {
-                          widget.onChange(_value);
+                        onToggle: (bool value) {
+                          widget.onChange(value);
                           setState(() {
-                            switchValue = _value;
+                            switchValue = value;
                           });
                         },
                       ),
@@ -112,9 +112,9 @@ class _SwitchWidgetState extends State<SwitchWidget> {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: PopupMenuButton(
-                    icon: Icon(Icons.more_vert, size: 18, color: Colors.grey),
+                    icon: const Icon(Icons.more_vert, size: 18, color: Colors.grey),
                     itemBuilder: (context) => <PopupMenuEntry>[
-                      PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
+                      const PopupMenuItem(value: 'delete', child: Text("Delete", style: kTextWarning)),
                     ],
                     onSelected: (value) {
                       if (value == "delete") widget.onDelete();

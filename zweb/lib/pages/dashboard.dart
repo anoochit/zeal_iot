@@ -10,7 +10,7 @@ import 'package:zweb/widgets/dashboard_menu.dart';
 import 'package:zweb/widgets/textheader.dart';
 
 class DashboardPage extends StatefulWidget {
-  DashboardPage({Key? key}) : super(key: key);
+  const DashboardPage({Key? key}) : super(key: key);
 
   @override
   _DashboardPageState createState() => _DashboardPageState();
@@ -26,7 +26,7 @@ class _DashboardPageState extends State<DashboardPage> {
     // create dashboard dialog
     showDialog(
       context: context,
-      builder: (BuildContext context) => Dialog(
+      builder: (BuildContext context) => const Dialog(
         shape: kCardBorderRadius,
         insetPadding: EdgeInsets.all(10),
         child: CreateDashboard(),
@@ -42,7 +42,7 @@ class _DashboardPageState extends State<DashboardPage> {
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              title: DashboardMenu(),
+              title: const DashboardMenu(),
               automaticallyImplyLeading: false,
             ),
             body: Column(
@@ -51,21 +51,21 @@ class _DashboardPageState extends State<DashboardPage> {
               children: [
                 Row(
                   children: [
-                    TextHeader(title: "Dashboard"),
-                    Spacer(),
+                    const TextHeader(title: "Dashboard"),
+                    const Spacer(),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: (scWidth > 412)
                           ? TextButton.icon(
-                              icon: Icon(Icons.add_circle),
-                              label: Text("Create Dashboard"),
+                              icon: const Icon(Icons.add_circle),
+                              label: const Text("Create Dashboard"),
                               onPressed: () {
                                 // create dashboard
                                 createDashboard();
                               },
                             )
                           : IconButton(
-                              icon: Icon(Icons.add_circle),
+                              icon: const Icon(Icons.add_circle),
                               onPressed: () {
                                 // create dashboard
                                 createDashboard();
@@ -84,13 +84,13 @@ class _DashboardPageState extends State<DashboardPage> {
                       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                         // has error
                         if (snapshot.hasError) {
-                          return Center(child: Text("Something, went wrong!"));
+                          return const Center(child: Text("Something, went wrong!"));
                         }
                         // has data
                         if (snapshot.hasData) {
                           var docs = snapshot.data!.docs;
 
-                          if (docs.length > 0) {
+                          if (docs.isNotEmpty) {
                             return GridView.builder(
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: getGridSized(scWidth)),
@@ -117,7 +117,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                     ),
                                                     onTap: () {
                                                       // open dashboard
-                                                      Get.toNamed('/dashboard/' + docs[index].id);
+                                                      Get.toNamed('/dashboard/${docs[index].id}');
                                                     },
                                                   ),
                                                   Container(
@@ -139,11 +139,12 @@ class _DashboardPageState extends State<DashboardPage> {
                                               child: Padding(
                                                 padding: const EdgeInsets.all(0.0),
                                                 child: PopupMenuButton(
-                                                  icon: Icon(Icons.more_vert, size: 16),
+                                                  icon: const Icon(Icons.more_vert, size: 16),
                                                   itemBuilder: (context) => <PopupMenuEntry>[
-                                                    PopupMenuItem(child: Text("Info"), value: 'info'),
-                                                    PopupMenuItem(
-                                                        child: Text("Delete", style: kTextWarning), value: 'delete'),
+                                                    const PopupMenuItem(value: 'info', child: Text("Info")),
+                                                    const PopupMenuItem(
+                                                        value: 'delete',
+                                                        child: Text("Delete", style: kTextWarning)),
                                                   ],
                                                   onSelected: (value) {
                                                     if (value == "delete") {
@@ -162,7 +163,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                           shape: kCardBorderRadius,
                                                           child: Container(
                                                             width: 350,
-                                                            padding: EdgeInsets.all(24),
+                                                            padding: const EdgeInsets.all(24),
                                                             child: Column(
                                                               mainAxisSize: MainAxisSize.min,
                                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +172,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                                                                   child: Text(
                                                                     docs[index]['title'],
-                                                                    style: Theme.of(context).textTheme.headline5,
+                                                                    style: Theme.of(context).textTheme.headlineSmall,
                                                                   ),
                                                                 ),
                                                                 Padding(
@@ -198,11 +199,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                 });
                           } else {
                             // document snapshot is 0
-                            return Center(child: Text("No dashboard, please create a new one"));
+                            return const Center(child: Text("No dashboard, please create a new one"));
                           }
                         }
                         // wainting snapshot
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       },
                     ),
                   ),
@@ -225,8 +226,8 @@ class CreateDashboard extends StatefulWidget {
 
 class _CreateDashboardState extends State<CreateDashboard> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _textInputTitle = TextEditingController();
-  TextEditingController _textInputDescription = TextEditingController();
+  final TextEditingController _textInputTitle = TextEditingController();
+  final TextEditingController _textInputDescription = TextEditingController();
 
   AppController controller = Get.find<AppController>();
 
@@ -238,7 +239,7 @@ class _CreateDashboardState extends State<CreateDashboard> {
         key: _formKey,
         child: Container(
           width: 375,
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -248,18 +249,18 @@ class _CreateDashboardState extends State<CreateDashboard> {
                 child: Container(
                   child: Text(
                     "Create Dashboard",
-                    style: Theme.of(context).textTheme.headline5,
+                    style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: kContainerRecRoundDecoration,
                   child: TextFormField(
                     controller: _textInputTitle,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Title',
                     ),
@@ -272,11 +273,11 @@ class _CreateDashboardState extends State<CreateDashboard> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: kContainerRecRoundDecoration,
                   child: TextFormField(
                     controller: _textInputDescription,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Description',
                     ),
@@ -291,9 +292,9 @@ class _CreateDashboardState extends State<CreateDashboard> {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Row(
                   children: [
-                    Spacer(),
+                    const Spacer(),
                     ElevatedButton(
-                      child: Text("Submit"),
+                      child: const Text("Submit"),
                       onPressed: () {
                         // submit form
                         if (_formKey.currentState!.validate()) {
@@ -305,17 +306,17 @@ class _CreateDashboardState extends State<CreateDashboard> {
                               'user': controller.userUid.value,
                             },
                           ).then((value) {
-                            log('docId ->' + value.id);
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Dashboard created!")));
+                            log('docId ->${value.id}');
+                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Dashboard created!")));
                             Get.back();
                           });
                         }
                       },
                     ),
-                    SizedBox(width: 8.0),
+                    const SizedBox(width: 8.0),
                     ElevatedButton(
                       style: kElevatedButtonRedButton,
-                      child: Text("Close"),
+                      child: const Text("Close"),
                       onPressed: () {
                         Get.back();
                       },

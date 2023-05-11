@@ -9,14 +9,14 @@ class Footer extends StatelessWidget {
     return Container(
       child: Wrap(
         children: [
-          Text("Made with "),
-          Icon(
+          const Text("Made with "),
+          const Icon(
             Icons.favorite,
             color: Colors.red,
           ),
-          Text(" by "),
+          const Text(" by "),
           InkWell(
-            child: Text("RedLine Software"),
+            child: const Text("RedLine Software"),
             onTap: () => launchURL("http://redlinesoft.net"),
           )
         ],

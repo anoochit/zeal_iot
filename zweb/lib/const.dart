@@ -64,9 +64,9 @@ class ChartData {
 
 // theme
 
-final kPrimarySwatch = Colors.blue;
+const kPrimarySwatch = Colors.blue;
 
-final kPrimaryColor = Colors.blue;
+const kPrimaryColor = Colors.blue;
 
 final kContainerRecRoundDecoration = BoxDecoration(
   color: Colors.white,
@@ -74,19 +74,19 @@ final kContainerRecRoundDecoration = BoxDecoration(
   borderRadius: BorderRadius.circular(10),
 );
 
-final kTextHeader = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-final kTextHeaderPage = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
-final kTextWarning = TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
-final kTextItemTitle = TextStyle(fontWeight: FontWeight.bold);
+const kTextHeader = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+const kTextHeaderPage = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+const kTextWarning = TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
+const kTextItemTitle = TextStyle(fontWeight: FontWeight.bold);
 
 final kElevatedButtonRedButton = ElevatedButton.styleFrom(backgroundColor: Colors.red);
 final kElevatedButtonGreenButton = ElevatedButton.styleFrom(backgroundColor: Colors.green);
 final kElevatedButtonPinkButton = ElevatedButton.styleFrom(backgroundColor: Colors.pink);
 final kElevatedButtonAmberButton = ElevatedButton.styleFrom(backgroundColor: Colors.amber);
 
-final kCardBorderRadius = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
+const kCardBorderRadius = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12.0)));
 
-final defaultAvatar = "https://via.placeholder.com/150";
+const defaultAvatar = "https://via.placeholder.com/150";
 
 final themeData = ThemeData(
   primarySwatch: kPrimarySwatch,
@@ -113,22 +113,22 @@ final themeData = ThemeData(
 final getPages = [
   GetPage(
     name: "/",
-    page: () => HomePage(),
+    page: () => const HomePage(),
     transition: Transition.noTransition,
   ),
   GetPage(
     name: "/document",
-    page: () => DocumentPage(),
+    page: () => const DocumentPage(),
     transition: Transition.noTransition,
   ),
   GetPage(
     name: "/signin",
-    page: () => AuthGate(),
+    page: () => const AuthGate(),
     transition: Transition.noTransition,
   ),
   GetPage(
     name: "/dashboard",
-    page: () => DashboardPage(),
+    page: () => const DashboardPage(),
     middlewares: [
       RouteGuard(),
     ],
@@ -136,7 +136,7 @@ final getPages = [
   ),
   GetPage(
     name: "/dashboard/:id",
-    page: () => DashboardDetailPage(),
+    page: () => const DashboardDetailPage(),
     middlewares: [
       RouteGuard(),
     ],
@@ -144,12 +144,12 @@ final getPages = [
   ),
   GetPage(
     name: "/device",
-    page: () => DevicePage(),
+    page: () => const DevicePage(),
     transition: Transition.noTransition,
   ),
   GetPage(
     name: "/device/:id",
-    page: () => DeviceDetailPage(),
+    page: () => const DeviceDetailPage(),
     middlewares: [
       RouteGuard(),
     ],
@@ -157,7 +157,7 @@ final getPages = [
   ),
   GetPage(
     name: "/profile",
-    page: () => ProfilePage(),
+    page: () => const ProfilePage(),
     middlewares: [
       RouteGuard(),
     ],

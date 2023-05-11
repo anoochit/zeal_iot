@@ -6,9 +6,14 @@ import 'package:zweb/const.dart';
 import 'package:zweb/controller/app_controller.dart';
 import 'package:zweb/pages/dashboard.dart';
 
-class AuthGate extends StatelessWidget {
-  AuthGate({super.key});
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key});
 
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
   AppController controller = Get.find<AppController>();
 
   @override
@@ -18,7 +23,7 @@ class AuthGate extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (!snapshot.hasData) {
           return SignInScreen(
-            providerConfigs: [
+            providerConfigs: const [
               EmailProviderConfiguration(),
             ],
             actions: [
@@ -47,7 +52,7 @@ class AuthGate extends StatelessWidget {
 
         // load user share preference
         controller.loadUserData();
-        return DashboardPage();
+        return const DashboardPage();
       },
     );
   }

@@ -12,7 +12,7 @@ import 'package:zweb/widgets/line.dart';
 import 'package:zweb/widgets/textheader.dart';
 
 class DashboardDetailPage extends StatefulWidget {
-  DashboardDetailPage({Key? key}) : super(key: key);
+  const DashboardDetailPage({Key? key}) : super(key: key);
 
   @override
   _DashboardDetailPageState createState() => _DashboardDetailPageState();
@@ -23,11 +23,11 @@ class _DashboardDetailPageState extends State<DashboardDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    log("dashboardId -> " + dashboardId);
+    log("dashboardId -> $dashboardId");
 
     return Scaffold(
       appBar: AppBar(
-        title: DashboardMenu(),
+        title: const DashboardMenu(),
         automaticallyImplyLeading: false,
       ),
       body: StreamBuilder(
@@ -35,7 +35,7 @@ class _DashboardDetailPageState extends State<DashboardDetailPage> {
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           // has error
           if (snapshot.hasError) {
-            return Center(
+            return const Center(
               child: Text('Something went wrong!'),
             );
           }
@@ -46,7 +46,7 @@ class _DashboardDetailPageState extends State<DashboardDetailPage> {
           }
 
           // wait snapshot
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         },
@@ -56,7 +56,7 @@ class _DashboardDetailPageState extends State<DashboardDetailPage> {
 }
 
 class DashboardDetail extends StatefulWidget {
-  DashboardDetail({
+  const DashboardDetail({
     Key? key,
     required this.data,
   }) : super(key: key);
@@ -85,15 +85,15 @@ class _DashboardDetailState extends State<DashboardDetail> {
         Row(
           children: [
             TextHeader(title: widget.data!['title']),
-            Spacer(),
+            const Spacer(),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: (scWidth > 450)
                   ? Row(
                       children: [
                         TextButton.icon(
-                          icon: Icon(Icons.reorder),
-                          label: (setOrder) ? Text("Exit Reorder") : Text("Reorder"),
+                          icon: const Icon(Icons.reorder),
+                          label: (setOrder) ? const Text("Exit Reorder") : const Text("Reorder"),
                           onPressed: () {
                             // add widget dialog
                             setState(() {
@@ -101,18 +101,18 @@ class _DashboardDetailState extends State<DashboardDetail> {
                             });
                           },
                         ),
-                        SizedBox(width: 8.0),
+                        const SizedBox(width: 8.0),
                         TextButton.icon(
-                          icon: Icon(Icons.add_circle),
-                          label: Text("Add Widget"),
+                          icon: const Icon(Icons.add_circle),
+                          label: const Text("Add Widget"),
                           onPressed: () {
-                            log("dashboard item count" + widgetCount.toString());
+                            log("dashboard item count$widgetCount");
                             // add widget dialog
                             showDialog(
                               context: context,
                               builder: (BuildContext context) => Dialog(
                                 shape: kCardBorderRadius,
-                                insetPadding: EdgeInsets.all(10),
+                                insetPadding: const EdgeInsets.all(10),
                                 child: AddWidget(dashboardId: widget.data!.id, itemCount: widgetCount),
                               ),
                             );
@@ -123,14 +123,14 @@ class _DashboardDetailState extends State<DashboardDetail> {
                   : Row(
                       children: [
                         IconButton(
-                            icon: Icon(Icons.add_circle),
+                            icon: const Icon(Icons.add_circle),
                             onPressed: () {
                               // add widget dialog
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) => Dialog(
                                   shape: kCardBorderRadius,
-                                  insetPadding: EdgeInsets.all(10),
+                                  insetPadding: const EdgeInsets.all(10),
                                   child: AddWidget(dashboardId: widget.data!.id, itemCount: widgetCount),
                                 ),
                               );
@@ -143,7 +143,7 @@ class _DashboardDetailState extends State<DashboardDetail> {
         Expanded(
           child: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: LayoutBuilder(builder: (context, constraints) {
                 return StreamBuilder(
                   stream: FirebaseFirestore.instance
@@ -154,14 +154,14 @@ class _DashboardDetailState extends State<DashboardDetail> {
                       .snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (snapshot.hasError) {
-                      return Text("Something went wrong");
+                      return const Text("Something went wrong");
                     }
 
                     // has data show widget
                     if (snapshot.hasData) {
                       var widgetDocs = snapshot.data!.docs;
                       widgetCount = snapshot.data!.docs.length;
-                      log("widget total = " + widgetDocs.length.toString());
+                      log("widget total = ${widgetDocs.length}");
 
                       // if set order is true load blank widget as placeholder
                       if (setOrder) {
@@ -433,7 +433,7 @@ class _DashboardDetailState extends State<DashboardDetail> {
                                   }
                                   if (snapshot.hasData) {
                                     var widgetData = snapshot.data;
-                                    log("snapshot value = " + widgetData![messageField].toString());
+                                    log("snapshot value = ${widgetData![messageField]}");
                                     return SwitchWidget(
                                       width: widget['width'],
                                       height: widget['height'],
@@ -446,7 +446,7 @@ class _DashboardDetailState extends State<DashboardDetail> {
                                       },
                                       onChange: (bool value) {
                                         // chnage value
-                                        log("switch value = " + value.toString());
+                                        log("switch value = $value");
                                         FirebaseFirestore.instance.collection("messages").doc(messageDoc).update({
                                           messageField: value,
                                         });
@@ -521,7 +521,7 @@ class _DashboardDetailState extends State<DashboardDetail> {
                                   }
                                   if (snapshot.hasData) {
                                     var widgetData = snapshot.data;
-                                    log("snapshot value = " + widgetData![messageField].toString());
+                                    log("snapshot value = ${widgetData![messageField]}");
 
                                     if (widgetData.exists) {
                                       return StatusWidget(
@@ -554,7 +554,7 @@ class _DashboardDetailState extends State<DashboardDetail> {
                             }
 
                             return Container(
-                              child: Text("Wrong type!"),
+                              child: const Text("Wrong type!"),
                             );
                           }).toList(),
                         );
@@ -562,7 +562,7 @@ class _DashboardDetailState extends State<DashboardDetail> {
                     }
 
                     return Container(
-                      child: Center(child: CircularProgressIndicator()),
+                      child: const Center(child: CircularProgressIndicator()),
                     );
                   },
                 );
@@ -597,10 +597,10 @@ class _AddWidgetState extends State<AddWidget> {
   String? selectWidgetField2;
   int? selectWidgetWidth;
   int? selectWidgetHeight;
-  TextEditingController _textInputTitle = TextEditingController();
-  TextEditingController _textInputWidgetMin = TextEditingController();
-  TextEditingController _textInputWidgetMax = TextEditingController();
-  TextEditingController _textInputWidgetUnit = TextEditingController();
+  final TextEditingController _textInputTitle = TextEditingController();
+  final TextEditingController _textInputWidgetMin = TextEditingController();
+  final TextEditingController _textInputWidgetMax = TextEditingController();
+  final TextEditingController _textInputWidgetUnit = TextEditingController();
 
   AppController controller = Get.find<AppController>();
 
@@ -612,7 +612,7 @@ class _AddWidgetState extends State<AddWidget> {
         child: SingleChildScrollView(
           child: Container(
             width: 375,
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Wrap(
               alignment: WrapAlignment.spaceBetween,
               children: [
@@ -621,7 +621,7 @@ class _AddWidgetState extends State<AddWidget> {
                   child: Container(
                     child: Text(
                       "Add widget",
-                      style: Theme.of(context).textTheme.headline5,
+                      style: Theme.of(context).textTheme.headlineSmall,
                     ),
                   ),
                 ),
@@ -630,10 +630,10 @@ class _AddWidgetState extends State<AddWidget> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Container(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     decoration: kContainerRecRoundDecoration,
                     child: DropdownButtonFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Select widget type",
                       ),
@@ -645,7 +645,7 @@ class _AddWidgetState extends State<AddWidget> {
                           .toList(),
                       onChanged: (value) {
                         // set value here
-                        log("widget type = " + value.toString());
+                        log("widget type = $value");
                         setState(() {
                           selectWidgetType = value.toString();
                           selectWidgetId = null;
@@ -674,10 +674,10 @@ class _AddWidgetState extends State<AddWidget> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Container(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: kContainerRecRoundDecoration,
                           child: DropdownButtonFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: "Select device",
                             ),
@@ -706,7 +706,7 @@ class _AddWidgetState extends State<AddWidget> {
                     }
 
                     return Container(
-                      child: CircularProgressIndicator(),
+                      child: const CircularProgressIndicator(),
                     );
                   },
                 ),
@@ -730,7 +730,7 @@ class _AddWidgetState extends State<AddWidget> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: Container(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 decoration: kContainerRecRoundDecoration,
                                 child: DropdownButtonFormField(
                                   decoration: InputDecoration(
@@ -762,7 +762,7 @@ class _AddWidgetState extends State<AddWidget> {
                           }
 
                           return Container(
-                            child: CircularProgressIndicator(),
+                            child: const CircularProgressIndicator(),
                           );
                         },
                       )
@@ -787,7 +787,7 @@ class _AddWidgetState extends State<AddWidget> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 8.0),
                               child: Container(
-                                padding: EdgeInsets.all(8),
+                                padding: const EdgeInsets.all(8),
                                 decoration: kContainerRecRoundDecoration,
                                 child: DropdownButtonFormField(
                                   decoration: InputDecoration(
@@ -819,7 +819,7 @@ class _AddWidgetState extends State<AddWidget> {
                           }
 
                           return Container(
-                            child: CircularProgressIndicator(),
+                            child: const CircularProgressIndicator(),
                           );
                         },
                       )
@@ -831,11 +831,11 @@ class _AddWidgetState extends State<AddWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Container(
                           width: (constraints.maxWidth > 412) ? (330 / 3) : ((constraints.maxWidth - 50) / 3),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: kContainerRecRoundDecoration,
                           child: TextFormField(
                             controller: _textInputWidgetMin,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Min value',
                             ),
@@ -853,11 +853,11 @@ class _AddWidgetState extends State<AddWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Container(
                           width: (constraints.maxWidth > 412) ? (330 / 3) : ((constraints.maxWidth - 50) / 3),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: kContainerRecRoundDecoration,
                           child: TextFormField(
                             controller: _textInputWidgetMax,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Max value',
                             ),
@@ -875,11 +875,11 @@ class _AddWidgetState extends State<AddWidget> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Container(
                           width: (constraints.maxWidth > 412) ? (330 / 3) : ((constraints.maxWidth - 50) / 3),
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           decoration: kContainerRecRoundDecoration,
                           child: TextFormField(
                             controller: _textInputWidgetUnit,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               hintText: 'Unit',
                             ),
@@ -896,10 +896,10 @@ class _AddWidgetState extends State<AddWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Container(
                     width: (constraints.maxWidth > 412) ? (330 / 2) : ((constraints.maxWidth - 40) / 2),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     decoration: kContainerRecRoundDecoration,
                     child: DropdownButtonFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Width",
                       ),
@@ -930,10 +930,10 @@ class _AddWidgetState extends State<AddWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Container(
                     width: (constraints.maxWidth > 412) ? (330 / 2) : ((constraints.maxWidth - 40) / 2),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     decoration: kContainerRecRoundDecoration,
                     child: DropdownButtonFormField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Height",
                       ),
@@ -963,12 +963,12 @@ class _AddWidgetState extends State<AddWidget> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Container(
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     decoration: kContainerRecRoundDecoration,
                     child: TextFormField(
                       controller: _textInputTitle,
                       autofocus: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: 'Title',
                       ),
@@ -984,9 +984,9 @@ class _AddWidgetState extends State<AddWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Row(
                     children: [
-                      Spacer(),
+                      const Spacer(),
                       ElevatedButton(
-                        child: Text("Submit"),
+                        child: const Text("Submit"),
                         onPressed: () {
                           // submit form
                           if (_formKey.currentState!.validate()) {
@@ -994,7 +994,7 @@ class _AddWidgetState extends State<AddWidget> {
                               // create field in device message
                               FirebaseFirestore.instance
                                   .collection('messages')
-                                  .doc(controller.userUid.value + "_" + selectWidgetId!)
+                                  .doc("${controller.userUid.value}_${selectWidgetId!}")
                                   .update({
                                 selectWidgetField.toString(): false,
                               });
@@ -1004,7 +1004,7 @@ class _AddWidgetState extends State<AddWidget> {
                                   .doc(widget.dashboardId)
                                   .collection('items')
                                   .add({
-                                'data': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField!,
+                                'data': "${controller.userUid + "_"}${selectWidgetId!}/${selectWidgetField!}",
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
                                 'type': selectWidgetType,
@@ -1018,8 +1018,8 @@ class _AddWidgetState extends State<AddWidget> {
                                   .doc(widget.dashboardId)
                                   .collection('items')
                                   .add({
-                                'data1': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField!,
-                                'data2': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField2!,
+                                'data1': "${controller.userUid + "_"}${selectWidgetId!}/${selectWidgetField!}",
+                                'data2': "${controller.userUid + "_"}${selectWidgetId!}/${selectWidgetField2!}",
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
                                 'type': selectWidgetType,
@@ -1033,7 +1033,7 @@ class _AddWidgetState extends State<AddWidget> {
                                   .doc(widget.dashboardId)
                                   .collection('items')
                                   .add({
-                                'data': controller.userUid + "_" + selectWidgetId! + "/" + selectWidgetField!,
+                                'data': "${controller.userUid + "_"}${selectWidgetId!}/${selectWidgetField!}",
                                 'width': selectWidgetWidth!,
                                 'height': selectWidgetHeight!,
                                 'min': double.parse(_textInputWidgetMin.text.trim()),
@@ -1047,10 +1047,10 @@ class _AddWidgetState extends State<AddWidget> {
                           }
                         },
                       ),
-                      SizedBox(width: 8.0),
+                      const SizedBox(width: 8.0),
                       ElevatedButton(
                         style: kElevatedButtonRedButton,
-                        child: Text("Close"),
+                        child: const Text("Close"),
                         onPressed: () {
                           Get.back();
                         },

@@ -9,7 +9,7 @@ import 'package:zweb/widgets/textheader.dart';
 import '../config.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
         builder: (controller) {
           return Scaffold(
             appBar: AppBar(
-              title: DashboardMenu(),
+              title: const DashboardMenu(),
               automaticallyImplyLeading: false,
             ),
             body: SingleChildScrollView(
@@ -31,14 +31,14 @@ class _ProfilePageState extends State<ProfilePage> {
                 builder: (context, constraints) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextHeader(title: "Profile"),
+                    const TextHeader(title: "Profile"),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Card(
                         shape: kCardBorderRadius,
                         child: Container(
                           width: constraints.maxWidth,
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: LayoutBuilder(
                             builder: (context, constraints) => Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,14 +50,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                                       child: Text(
                                         '${controller.userDisplayName}',
-                                        style: Theme.of(context).textTheme.headline4,
+                                        style: Theme.of(context).textTheme.headlineMedium,
                                       ),
                                     ),
                                     Container(
                                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                                       child: Text(
                                         "Credential",
-                                        style: Theme.of(context).textTheme.headline5,
+                                        style: Theme.of(context).textTheme.headlineSmall,
                                       ),
                                     ),
                                     Wrap(
@@ -69,7 +69,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           children: [
                                             Container(
                                               padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                              child: Text(
+                                              child: const Text(
                                                 "Access Key",
                                               ),
                                             ),
@@ -79,13 +79,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 Expanded(
                                                   child: Container(
                                                     //width: (constraints.maxWidth < 412) ? (constraints.maxWidth - 48) : (constraints.maxWidth * 0.5),
-                                                    padding: EdgeInsets.all(16),
+                                                    padding: const EdgeInsets.all(16),
                                                     decoration: kContainerRecRoundDecoration,
                                                     child: SelectableText(controller.userUid.value),
                                                   ),
                                                 ),
                                                 IconButton(
-                                                  icon: Icon(Icons.copy, size: 16),
+                                                  icon: const Icon(Icons.copy, size: 16),
                                                   onPressed: () {
                                                     FlutterClipboard.copy(controller.userUid.value);
                                                   },
@@ -99,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           children: [
                                             Container(
                                               padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                              child: Text("API Key"),
+                                              child: const Text("API Key"),
                                             ),
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -107,13 +107,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 Expanded(
                                                   child: Container(
                                                     //width: (constraints.maxWidth < 412) ? (constraints.maxWidth - 48) : (constraints.maxWidth * 0.5),
-                                                    padding: EdgeInsets.all(16),
+                                                    padding: const EdgeInsets.all(16),
                                                     decoration: kContainerRecRoundDecoration,
-                                                    child: SelectableText(WEB_KEY),
+                                                    child: const SelectableText(WEB_KEY),
                                                   ),
                                                 ),
                                                 IconButton(
-                                                  icon: Icon(Icons.copy, size: 16),
+                                                  icon: const Icon(Icons.copy, size: 16),
                                                   onPressed: () {
                                                     FlutterClipboard.copy(WEB_KEY);
                                                   },

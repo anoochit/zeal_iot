@@ -3,7 +3,7 @@ import 'package:zweb/contents/document.dart';
 import 'package:zweb/widgets/main_menu.dart';
 
 class DocumentPage extends StatefulWidget {
-  DocumentPage({Key? key}) : super(key: key);
+  const DocumentPage({Key? key}) : super(key: key);
 
   @override
   _DocumentPageState createState() => _DocumentPageState();
@@ -20,10 +20,10 @@ class _DocumentPageState extends State<DocumentPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: MainMenu(),
+        title: const MainMenu(),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             DocumentContent(),

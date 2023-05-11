@@ -4,7 +4,7 @@ import 'package:zweb/widgets/footer.dart';
 import 'package:zweb/widgets/main_menu.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: MainMenu(),
+        title: const MainMenu(),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
+      body: const SingleChildScrollView(
         child: Column(
           children: [
             HomeContent(),

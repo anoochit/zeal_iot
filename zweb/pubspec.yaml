@@ -18,38 +18,39 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.0 <3.0.0"
+  sdk: "^3.0.0"
 
 dependencies:
   beamer: ^1.5.3
   cached_network_image: ^3.1.0
   clipboard: ^0.1.3
-  cloud_firestore: ^3.5.0
+  cloud_firestore: ^4.7.0
   cupertino_icons: ^1.0.5
-  firebase_auth: ^3.11.0
-  firebase_core: ^1.24.0
+  firebase_auth: ^4.6.0
+  firebase_core: ^2.12.0
   flutter:
     sdk: flutter
   flutter_markdown: ^0.6.12
   flutter_switch: ^0.3.2
   flutterfire_ui: ^0.4.3+11
   get: ^4.6.5
-  intl: ^0.17.0
+  intl: ^0.18.0
   latlng: ^0.2.0
   map: ^1.3.3
   path_provider: ^2.0.11
   percent_indicator: ^4.2.2
-  reorderables: ^0.5.0
+  reorderables: ^0.6.0
   shared_preferences: ^2.0.15
-  syncfusion_flutter_charts: ^20.3.47
-  syncfusion_flutter_datagrid: ^20.3.47
-  syncfusion_flutter_gauges: ^20.3.47
+  syncfusion_flutter_charts: ^21.2.4
+  syncfusion_flutter_datagrid: ^21.2.4
+  syncfusion_flutter_gauges: ^21.2.4
   textfield_tags: ^2.0.2
   url_launcher: ^6.1.6
   url_strategy: ^0.2.0
 
 dev_dependencies:
-  flutter_launcher_icons: ^0.10.0
+  flutter_lints: ^2.0.0
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 

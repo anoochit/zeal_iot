@@ -5,7 +5,7 @@
  * pm1 : PM 1.0 (ug/m3)
  * pm25 : PM 2.5 (ug/m3)
  * pm10 : PM 10.0 (ug/m3)
- * 
+ *
  */
 #include <Arduino.h>
 
@@ -57,7 +57,7 @@ PMS::DATA data;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
 
-//Define Firebase Data object
+// Define Firebase Data object
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
@@ -94,7 +94,7 @@ void setup()
   // GMT -1 = -3600
   // GMT 0 = 0
   timeClient.begin();
-  //timeClient.setTimeOffset(25200);
+  // timeClient.setTimeOffset(25200);
 
   // force update time
   timeClient.update();
@@ -111,7 +111,7 @@ void setup()
   Firebase.reconnectWiFi(true);
 
 #if defined(ESP8266)
-  //Set the size of WiFi rx/tx buffers in the case where we want to work with large data.
+  // Set the size of WiFi rx/tx buffers in the case where we want to work with large data.
   fbdo.setBSSLBufferSize(1024, 1024);
 #endif
 }
@@ -211,20 +211,19 @@ void loop()
     // Document path is "messages/ACCESS_KEY_DEVICE_ID"
     // following with your device default fields and timestamp eg: temp, humid, timestamp
     String documentPath = "messages/" + String(ACCESS_KEY) + "_" + String(DEVICE_ID);
-    String documentLogPath = "messages/" + String(ACCESS_KEY) + "_" + String(DEVICE_ID) + "/log/" + String(timestamp) ;
+    String documentLogPath = "messages/" + String(ACCESS_KEY) + "_" + String(DEVICE_ID) + "/log/" + String(timestamp);
 
     js.set("fields/pm1/integerValue", String(pm1).c_str());
     js.set("fields/pm25/integerValue", String(pm25).c_str());
     js.set("fields/pm10/integerValue", String(pm10).c_str());
     js.set("fields/timestamp/doubleValue", String(timestamp).c_str());
     js.toString(content);
- 
 
     // create message document
     Serial.println("------------------------------------");
     Serial.println("Create a document...");
 
-    if (Firebase.Firestore.patchDocument(&fbdo, FIREBASE_PROJECT_ID, "" /* databaseId can be (default) or empty */, documentPath.c_str(), content.c_str(), "pm1,pm25,pm10,timestamp" ))
+    if (Firebase.Firestore.patchDocument(&fbdo, FIREBASE_PROJECT_ID, "" /* databaseId can be (default) or empty */, documentPath.c_str(), content.c_str(), "pm1,pm25,pm10,timestamp"))
     {
       Serial.println("PASSED");
       Serial.println("------------------------------------");
@@ -241,7 +240,7 @@ void loop()
     }
 
     // create message log doucment
-    if (Firebase.Firestore.createDocument(&fbdo, FIREBASE_PROJECT_ID, "" /* databaseId can be (default) or empty */, documentLogPath.c_str(), content.c_str() ))
+    if (Firebase.Firestore.createDocument(&fbdo, FIREBASE_PROJECT_ID, "" /* databaseId can be (default) or empty */, documentLogPath.c_str(), content.c_str()))
     {
       Serial.println("PASSED");
       Serial.println("------------------------------------");
@@ -261,5 +260,4 @@ void loop()
   Serial.println("PMS going to sleep");
   pms.sleep();
   delay(60000);
-   
 }

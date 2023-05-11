@@ -11,7 +11,7 @@ import 'package:zweb/widgets/texsubtheader.dart';
 import 'package:zweb/widgets/textheader.dart';
 
 class DeviceDetailPage extends StatefulWidget {
-  DeviceDetailPage({Key? key}) : super(key: key);
+  const DeviceDetailPage({Key? key}) : super(key: key);
 
   @override
   _DeviceDetailPageState createState() => _DeviceDetailPageState();
@@ -44,7 +44,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
     //double scWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: DashboardMenu(),
+        title: const DashboardMenu(),
         automaticallyImplyLeading: false,
       ),
       body: Container(
@@ -55,7 +55,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
               future: FirebaseFirestore.instance.collection('devices').doc(deviceId!).get(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasError) {
-                  return Text("Somthing went wrong!");
+                  return const Text("Somthing went wrong!");
                 }
 
                 // has device data show device detail
@@ -70,10 +70,10 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                   //   log(element);
                   //   deviceFields.add(element);
                   // });
-                  dataField.forEach((element) {
+                  for (var element in dataField) {
                     //log(element);
                     deviceFields.add(element);
-                  });
+                  }
 
                   // show device info
                   return Column(
@@ -94,12 +94,12 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                               children: [
                                 Row(
                                   children: [
-                                    Text("ID : "),
+                                    const Text("ID : "),
                                     Chip(
                                       label: SelectableText(deviceId!),
                                     ),
                                     IconButton(
-                                      icon: Icon(Icons.copy, size: 16),
+                                      icon: const Icon(Icons.copy, size: 16),
                                       onPressed: () {
                                         FlutterClipboard.copy(deviceId!);
                                       },
@@ -108,7 +108,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                 ),
                                 Row(
                                   children: [
-                                    Text("Control : "),
+                                    const Text("Control : "),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Wrap(
@@ -126,7 +126,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                 ),
                                 Row(
                                   children: [
-                                    Text("Data : "),
+                                    const Text("Data : "),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                                       child: Wrap(
@@ -153,14 +153,14 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                         child: FutureBuilder(
                           future: FirebaseFirestore.instance
                               .collection('messages')
-                              .doc(controller.userUid.value + "_" + deviceId!)
+                              .doc("${controller.userUid.value}_${deviceId!}")
                               .collection('log')
                               .orderBy('timestamp', descending: true)
                               .limit(10)
                               .get(),
                           builder: (BuildContext context, AsyncSnapshot snapshot) {
                             if (snapshot.hasError) {
-                              return Text("Cannot load device message log");
+                              return const Text("Cannot load device message log");
                             }
 
                             if (snapshot.hasData) {
@@ -173,7 +173,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: SfDataGrid(
-                                      source: new DeviceDataSource(deviceMessageLog, deviceFields),
+                                      source: DeviceDataSource(deviceMessageLog, deviceFields),
                                       columns: deviceFields.map((field) {
                                         return GridColumn(
                                           columnWidthMode: ColumnWidthMode.auto,
@@ -193,7 +193,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                               );
                             }
 
-                            return Center(child: CircularProgressIndicator());
+                            return const Center(child: CircularProgressIndicator());
                           },
                         ),
                       ),
@@ -201,7 +201,7 @@ class _DeviceDetailPageState extends State<DeviceDetailPage> {
                   );
                 }
 
-                return Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
               },
             ),
           ),

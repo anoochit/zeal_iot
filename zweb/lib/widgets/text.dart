@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zweb/const.dart';
 
-class TextWidget extends StatelessWidget {
+class TextWidget extends StatefulWidget {
   const TextWidget({
     Key? key,
     required this.width,
@@ -22,42 +22,47 @@ class TextWidget extends StatelessWidget {
   final VoidCallback onDelete;
 
   @override
+  State<TextWidget> createState() => _TextWidgetState();
+}
+
+class _TextWidgetState extends State<TextWidget> {
+  @override
   Widget build(BuildContext context) {
-    var _constrainWidth = width;
-    var _offset = offset;
+    var constrainWidth = widget.width;
+    var offset = widget.offset;
 
     // if mobile overide width to 4 grid
     if ((MediaQuery.of(context).size.width > 960)) {
-      _offset = offset;
+      offset = offset;
     } else if ((MediaQuery.of(context).size.width < 412)) {
-      _constrainWidth = 4;
-      _offset = 0;
+      constrainWidth = 4;
+      offset = 0;
     }
 
-    if (_constrainWidth == 2) {
-      _offset = offset - 16;
+    if (constrainWidth == 2) {
+      offset = offset - 16;
     }
 
-    if (_constrainWidth == 3) {
-      _offset = offset - 20;
+    if (constrainWidth == 3) {
+      offset = offset - 20;
     }
 
-    if (_constrainWidth == 4) {
-      _offset = 0;
+    if (constrainWidth == 4) {
+      offset = 0;
     }
 
-    var _width = MediaQuery.of(context).size.width - _offset;
-    var _height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width - offset;
+    var height = MediaQuery.of(context).size.height;
 
-    var _containerWidth = ((_width * ((0.25) * _constrainWidth)));
-    var _containerHeight = ((_height * ((0.25) * height)));
+    var containerWidth = ((width * ((0.25) * constrainWidth)));
+    var containerHeight = ((height * ((0.25) * height)));
 
     return Card(
       shape: kCardBorderRadius,
       child: Container(
-          width: _containerWidth,
-          height: _containerHeight,
-          decoration: BoxDecoration(),
+          width: containerWidth,
+          height: containerHeight,
+          decoration: const BoxDecoration(),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Stack(
             children: [
@@ -65,12 +70,12 @@ class TextWidget extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(title),
-                    Container(
-                      width: _containerWidth * 0.8,
-                      height: _containerHeight * 0.8,
+                    Text(widget.title),
+                    SizedBox(
+                      width: containerWidth * 0.8,
+                      height: containerHeight * 0.8,
                       child: FittedBox(
-                        child: Text('$value'),
+                        child: Text(widget.value),
                       ),
                     ),
                   ],
@@ -82,12 +87,15 @@ class TextWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: PopupMenuButton(
-                    icon: Icon(Icons.more_vert, size: 18, color: Colors.grey),
+                    icon: const Icon(Icons.more_vert,
+                        size: 18, color: Colors.grey),
                     itemBuilder: (context) => <PopupMenuEntry>[
-                      PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
+                      const PopupMenuItem(
+                          value: 'delete',
+                          child: Text("Delete", style: kTextWarning)),
                     ],
                     onSelected: (value) {
-                      if (value == "delete") onDelete();
+                      if (value == "delete") widget.onDelete();
                     },
                   ),
                 ),

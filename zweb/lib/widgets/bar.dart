@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:zweb/const.dart';
 
-class BarChartWidget extends StatelessWidget {
+class BarChartWidget extends StatefulWidget {
   const BarChartWidget({
     Key? key,
     required this.width,
@@ -27,42 +27,47 @@ class BarChartWidget extends StatelessWidget {
   final VoidCallback onDelete;
 
   @override
+  State<BarChartWidget> createState() => _BarChartWidgetState();
+}
+
+class _BarChartWidgetState extends State<BarChartWidget> {
+  @override
   Widget build(BuildContext context) {
-    var _constrainWidth = width;
-    var _offset = offset;
+    var constrainWidth = widget.width;
+    var offset = widget.offset;
 
     // if mobile overide width to 4 grid
     if ((MediaQuery.of(context).size.width > 960)) {
-      _offset = offset;
+      offset = offset;
     } else if ((MediaQuery.of(context).size.width < 412)) {
-      _constrainWidth = 4;
-      _offset = 0;
+      constrainWidth = 4;
+      offset = 0;
     }
 
-    if (_constrainWidth == 2) {
-      _offset = offset - 16;
+    if (constrainWidth == 2) {
+      offset = offset - 16;
     }
 
-    if (_constrainWidth == 3) {
-      _offset = offset - 20;
+    if (constrainWidth == 3) {
+      offset = offset - 20;
     }
 
-    if (_constrainWidth == 4) {
-      _offset = 0;
+    if (constrainWidth == 4) {
+      offset = 0;
     }
 
-    var _width = MediaQuery.of(context).size.width - _offset;
-    var _height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width - offset;
+    var height = MediaQuery.of(context).size.height;
 
-    var _containerWidth = ((_width * ((0.25) * _constrainWidth)));
-    var _containerHeight = ((_height * ((0.25) * height)));
+    var containerWidth = ((width * ((0.25) * constrainWidth)));
+    var containerHeight = ((height * ((0.25) * height)));
 
     return Card(
       shape: kCardBorderRadius,
       child: Container(
-          width: _containerWidth,
-          height: _containerHeight,
-          decoration: BoxDecoration(
+          width: containerWidth,
+          height: containerHeight,
+          decoration: const BoxDecoration(
               //border: Border.all(color: Colors.grey.shade200),
               //borderRadius: BorderRadius.circular(8.0),
               ),
@@ -75,13 +80,14 @@ class BarChartWidget extends StatelessWidget {
                     intervalType: DateTimeIntervalType.auto,
                     dateFormat: DateFormat('y MMM E d HH:mm'),
                   ),
-                  title: ChartTitle(text: title),
+                  title: ChartTitle(text: widget.title),
                   primaryYAxis: NumericAxis(),
                   tooltipBehavior: TooltipBehavior(enable: true),
                   series: <ChartSeries>[
                     ColumnSeries<ChartData, dynamic>(
                       color: Theme.of(context).primaryColor.withOpacity(0.6),
-                      dataSource: buildChartData(data: data, field: field),
+                      dataSource: buildChartData(
+                          data: widget.data, field: widget.field),
                       xValueMapper: (ChartData data, _) => data.timestamp,
                       yValueMapper: (ChartData data, _) => data.value,
                     )
@@ -94,12 +100,15 @@ class BarChartWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: PopupMenuButton(
-                    icon: Icon(Icons.more_vert, size: 18, color: Colors.grey),
+                    icon: const Icon(Icons.more_vert,
+                        size: 18, color: Colors.grey),
                     itemBuilder: (context) => <PopupMenuEntry>[
-                      PopupMenuItem(child: Text("Delete", style: kTextWarning), value: 'delete'),
+                      const PopupMenuItem(
+                          value: 'delete',
+                          child: Text("Delete", style: kTextWarning)),
                     ],
                     onSelected: (value) {
-                      if (value == "delete") onDelete();
+                      if (value == "delete") widget.onDelete();
                     },
                   ),
                 ),
@@ -109,16 +118,18 @@ class BarChartWidget extends StatelessWidget {
     );
   }
 
-  dynamic buildChartData({required List<QueryDocumentSnapshot> data, required String field}) {
+  dynamic buildChartData(
+      {required List<QueryDocumentSnapshot> data, required String field}) {
     List<ChartData> chartData = <ChartData>[];
-    data.forEach((doc) {
+    for (var doc in data) {
       chartData.add(
         ChartData(
-          timestamp: Timestamp.fromDate(DateTime.fromMillisecondsSinceEpoch(doc['timestamp'] * 1000)),
+          timestamp: Timestamp.fromDate(
+              DateTime.fromMillisecondsSinceEpoch(doc['timestamp'] * 1000)),
           value: doc[field].toDouble(),
         ),
       );
-    });
+    }
     return chartData;
   }
 }

@@ -32,7 +32,7 @@ class AppController extends GetxController {
       uid: FirebaseAuth.instance.currentUser!.uid,
       displayname: '$userDisplayName',
       photoURL: '$userPhotoURL',
-      role: '$role',
+      role: role,
     );
 
     // save to firebase
@@ -51,7 +51,7 @@ class AppController extends GetxController {
     var value = await FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid).get();
 
     log('get user data');
-    log("uid = " + value.id);
+    log("uid = ${value.id}");
     log("name = " + value['name']);
     log("photo = " + value['image']);
     log("role = " + value['role']);
@@ -78,9 +78,9 @@ class AppController extends GetxController {
     String photo = pref.getString("photoURL") ?? "";
     String role = pref.getString("role") ?? "u";
 
-    log('get uid -> ' + uid);
-    log('get displayName -> ' + displayName);
-    log('get photoURL -> ' + photo);
+    log('get uid -> $uid');
+    log('get displayName -> $displayName');
+    log('get photoURL -> $photo');
 
     userUid.value = uid;
     userDisplayName.value = displayName;
@@ -113,8 +113,8 @@ class AppController extends GetxController {
   }
 
   bool isSignIn() {
-    User? _user = auth.currentUser;
-    if (_user == null) {
+    User? user = auth.currentUser;
+    if (user == null) {
       return false;
     } else {
       getUserSharedPreference();

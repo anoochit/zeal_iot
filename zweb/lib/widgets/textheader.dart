@@ -12,7 +12,7 @@ class TextHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(24),
+      padding: const EdgeInsets.all(24),
       child: Text(title, style: kTextHeaderPage),
     );
   }
